@@ -7,6 +7,8 @@
 """
 
 import streamlit as st
+import io
+import base64
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -38,6 +40,497 @@ def hex_to_rgba(hex_color, alpha=0.08):
     else:
         r, g, b = 173, 216, 230
     return f"rgba({r},{g},{b},{alpha:.2f})"
+
+
+# ─────────────────────────────────────────────────────────────────
+# EXCEL TEMPLATE GENERATOR
+# ─────────────────────────────────────────────────────────────────
+def create_excel_template():
+    """Build and return the Bank Stress Test input template as bytes."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    wb = Workbook()
+
+    C_DB = "00003366"; C_MB = "00004d80"; C_GOLD = "00FFD700"
+    C_LB = "00ADD8E6"; C_BG = "001A2A4A"; C_INP = "00EBF5FB"
+    C_FML = "00F0FFF0"; C_WH = "00FFFFFF"
+    thin  = Side(style="thin",   color="004d80")
+    gold_s = Side(style="medium", color="FFD700")
+
+    def _bdr(): return Border(left=thin, right=thin, top=thin, bottom=thin)
+    def _fill(c): return PatternFill("solid", fgColor=c)
+    def _ctr(): return Alignment(horizontal="center", vertical="center", wrap_text=True)
+    def _lft(): return Alignment(horizontal="left",   vertical="center", wrap_text=True)
+    def _rgt(): return Alignment(horizontal="right",  vertical="center")
+
+    def _sheet_header(ws, title):
+        ws.row_dimensions[1].height = 32
+        ws.merge_cells("B1:F1")
+        c = ws["B1"]; c.value = title
+        c.font = Font(name="Calibri", size=13, bold=True, color=C_GOLD)
+        c.fill = _fill(C_DB); c.alignment = _lft()
+        for col, hdr in enumerate(["Field", "Unit", "► Enter Value Here ◄", "RBI Min / Notes", "Source"], start=2):
+            cc = ws.cell(row=2, column=col, value=hdr)
+            cc.font = Font(name="Calibri", size=10, bold=True, color=C_WH)
+            cc.fill = _fill(C_MB); cc.alignment = _ctr()
+            cc.border = Border(left=thin, right=thin, top=thin,
+                               bottom=Side(style="medium", color="FFD700"))
+
+    def _section(ws, row, title):
+        ws.row_dimensions[row].height = 20
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=6)
+        c = ws.cell(row=row, column=2, value=title)
+        c.font = Font(name="Calibri", size=10, bold=True, color=C_GOLD)
+        c.fill = _fill(C_DB)
+        c.border = Border(left=gold_s, right=thin, top=thin, bottom=thin)
+        c.alignment = _lft()
+
+    def _inp(ws, row, label, unit, value, note="", src=""):
+        ws.row_dimensions[row].height = 17
+        lc = ws.cell(row=row, column=2, value=label)
+        lc.font = Font(name="Calibri", size=10, color="00D0DFF0"); lc.fill = _fill(C_BG)
+        lc.alignment = _lft(); lc.border = _bdr()
+        uc = ws.cell(row=row, column=3, value=unit)
+        uc.font = Font(name="Calibri", size=9, color="00ADD8E6"); uc.fill = _fill(C_BG)
+        uc.alignment = _ctr(); uc.border = _bdr()
+        vc = ws.cell(row=row, column=4, value=value)
+        vc.font = Font(name="Calibri", size=10, bold=True, color="00003366")
+        vc.fill = _fill(C_INP)
+        vc.border = Border(left=gold_s, right=thin, top=thin, bottom=thin)
+        vc.alignment = _rgt()
+        if isinstance(value, (int, float)):
+            vc.number_format = "#,##0.00"
+        nc = ws.cell(row=row, column=5, value=note)
+        nc.font = Font(name="Calibri", size=8, italic=True, color="00555555")
+        nc.fill = _fill("00F5F5F5"); nc.alignment = _lft(); nc.border = _bdr()
+        sc = ws.cell(row=row, column=6, value=src)
+        sc.font = Font(name="Calibri", size=8, color="00888888")
+        sc.fill = _fill("00F5F5F5"); sc.alignment = _lft(); sc.border = _bdr()
+
+    def _col_widths(ws, widths):
+        for col_letter, w in widths.items():
+            ws.column_dimensions[col_letter].width = w
+
+    # ── SHEET 0: INSTRUCTIONS ───────────────────────────────────
+    ws0 = wb.active; ws0.title = "📋 Instructions"
+    ws0.sheet_properties.tabColor = "FFD700"
+    _col_widths(ws0, {"A":3,"B":52,"C":30})
+    ws0.row_dimensions[1].height = 36
+    ws0.merge_cells("B1:C1")
+    t = ws0["B1"]; t.value = "🏦  THE MOUNTAIN PATH — Bank Stress Test Input Template"
+    t.font = Font(name="Calibri", size=14, bold=True, color=C_GOLD)
+    t.fill = _fill(C_DB); t.alignment = _lft()
+    lines = [
+        (2,"Prof. V. Ravichandran  |  28+ Yrs Corporate Finance & Banking",False,"00ADD8E6",C_DB,10),
+        (4,"HOW TO USE THIS TEMPLATE",True,C_GOLD,C_DB,11),
+        (5,"1.  Fill ONLY the light-blue ► Enter Value Here ◄ cells.",False,"00003366","00EBF5FB",10),
+        (6,"2.  Do NOT change row order, field names, or sheet names.",False,"00003366","00EBF5FB",10),
+        (7,"3.  All monetary values in ₹ CRORE unless unit column says otherwise.",False,"00003366","00EBF5FB",10),
+        (8,"4.  Percentages: enter as numbers — e.g. type 7.5 for 7.5%, NOT 0.075.",False,"00003366","00EBF5FB",10),
+        (9,"5.  After filling, save and upload to the Stress Testing Lab app.",False,"00003366","00EBF5FB",10),
+        (11,"SHEET GUIDE",True,C_GOLD,C_DB,11),
+        (12,"📊 BS_Assets       →  Balance Sheet: Assets",False,"00D0DFF0",C_BG,10),
+        (13,"📊 BS_Liabilities  →  Balance Sheet: Liabilities & Capital",False,"00D0DFF0",C_BG,10),
+        (14,"📊 Income_Stmt     →  Annual P&L (NII, fees, provisions, PAT)",False,"00D0DFF0",C_BG,10),
+        (15,"📊 Asset_Quality   →  NPA ratios and sector concentrations",False,"00D0DFF0",C_BG,10),
+        (16,"📊 Capital_Ratios  →  CET1, CRAR, LCR, NSFR, profitability",False,"00D0DFF0",C_BG,10),
+        (17,"📊 Duration_Risk   →  AFS duration, repricing gap, FX exposure",False,"00D0DFF0",C_BG,10),
+        (19,"COLOUR CODING",True,C_GOLD,C_DB,11),
+        (20,"🔵 Light Blue  =  USER INPUT — enter your bank data here",False,"00003366","00EBF5FB",10),
+        (21,"🟢 Light Green =  Auto-calculated formulas — do not edit",False,"00005500","00F0FFF0",10),
+        (22,"🔵 Dark Blue   =  Labels and headers — do not edit",False,"00D0DFF0",C_BG,10),
+    ]
+    for row,txt,bold,fc,bg,sz in lines:
+        ws0.row_dimensions[row].height = 18
+        ws0.merge_cells(f"B{row}:C{row}")
+        c = ws0[f"B{row}"]; c.value = txt
+        c.font = Font(name="Calibri", size=sz, bold=bold, color=fc)
+        c.fill = _fill(bg); c.alignment = _lft()
+
+    # ── SHEET 1: BS ASSETS ──────────────────────────────────────
+    ws1 = wb.create_sheet("📊 BS_Assets")
+    ws1.sheet_properties.tabColor = "003366"
+    _col_widths(ws1, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws1, "BALANCE SHEET — ASSETS  (₹ Crore)")
+    r = 3
+    _section(ws1, r, "BANK IDENTIFICATION"); r+=1
+    for lbl,unit,val,note in [
+        ("Bank Name","Text","Enter Bank Name","Official registered name"),
+        ("Bank Type","Text","Private / PSU / SFB","Scheduled Commercial Bank"),
+        ("Financial Year","Text","FY2024-25","Period of data"),
+        ("Credit Rating","Text","AA- / AA / A+","CRISIL / ICRA / CARE"),
+    ]:
+        _inp(ws1, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws1, r, "CREDIT PORTFOLIO"); r+=1
+    for lbl,unit,val,note in [
+        ("Total Assets","₹ Cr",185000,"Sum of all assets on balance sheet"),
+        ("Gross Loans & Advances","₹ Cr",108000,"Total gross loan book before provisions"),
+        ("  ► Retail Loans","₹ Cr",38000,"Home, personal, vehicle, gold loans"),
+        ("  ► Corporate Loans","₹ Cr",45000,"Large corporate and mid-market"),
+        ("  ► MSME Loans","₹ Cr",18000,"Micro, small and medium enterprises"),
+        ("  ► Agriculture Loans","₹ Cr",7000,"Priority sector agri credit"),
+        ("  ► Other Loans","₹ Cr",0,"Other loan segments"),
+        ("Gross NPA","₹ Cr",7560,"Total gross non-performing assets"),
+        ("Net NPA","₹ Cr",3780,"Gross NPA minus provisions"),
+        ("Provisions Held","₹ Cr",3780,"Total loan loss provisions"),
+    ]:
+        _inp(ws1, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws1, r, "INVESTMENTS"); r+=1
+    for lbl,unit,val,note in [
+        ("HTM Investments","₹ Cr",28000,"Held-to-maturity (G-secs, SDLs)"),
+        ("AFS Investments","₹ Cr",14000,"Available-for-sale (MTM risk)"),
+        ("HFT Investments","₹ Cr",0,"Held-for-trading"),
+        ("Equity Portfolio","₹ Cr",3200,"Equity shares and ETFs"),
+    ]:
+        _inp(ws1, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws1, r, "OTHER ASSETS"); r+=1
+    for lbl,unit,val,note in [
+        ("Cash & Balances with RBI","₹ Cr",12000,"CRR + vault cash"),
+        ("HQLA / Liquid Assets","₹ Cr",22000,"High quality liquid assets (LCR)"),
+        ("Fixed Assets","₹ Cr",1800,"Premises, equipment, software"),
+        ("Other Assets","₹ Cr",8000,"Deferred tax, intangibles, other"),
+    ]:
+        _inp(ws1, r, lbl, unit, val, note); r+=1
+
+    # ── SHEET 2: BS LIABILITIES ─────────────────────────────────
+    ws2 = wb.create_sheet("📊 BS_Liabilities")
+    ws2.sheet_properties.tabColor = "003366"
+    _col_widths(ws2, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws2, "BALANCE SHEET — LIABILITIES & CAPITAL  (₹ Crore)")
+    r = 3
+    _section(ws2, r, "DEPOSITS"); r+=1
+    for lbl,unit,val,note in [
+        ("Total Deposits","₹ Cr",148000,"All customer deposits"),
+        ("  ► CASA Deposits","₹ Cr",59200,"Current + savings accounts"),
+        ("  ► Term Deposits","₹ Cr",88800,"Fixed deposits"),
+    ]:
+        _inp(ws2, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws2, r, "BORROWINGS"); r+=1
+    for lbl,unit,val,note in [
+        ("Wholesale / Market Funding","₹ Cr",18500,"CPs, NCDs, interbank borrowings"),
+        ("Subordinated Debt","₹ Cr",3200,"Lower Tier 2 bonds"),
+        ("Other Liabilities","₹ Cr",1000,"Provisions payable, deferred tax"),
+    ]:
+        _inp(ws2, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws2, r, "CAPITAL & RESERVES"); r+=1
+    for lbl,unit,val,note in [
+        ("Share Capital","₹ Cr",1200,"Paid-up equity share capital"),
+        ("Reserves & Surplus","₹ Cr",12300,"Retained earnings + statutory reserves"),
+        ("CET1 Capital","₹ Cr",13500,"Common Equity Tier 1"),
+        ("Additional Tier 1 (AT1)","₹ Cr",1500,"Perpetual bonds / AT1 instruments"),
+        ("Tier 2 Capital","₹ Cr",3200,"Sub-debt + general provisions"),
+        ("Total Capital (Regulatory)","₹ Cr",18200,"CET1 + AT1 + Tier 2"),
+        ("Risk-Weighted Assets (RWA)","₹ Cr",141000,"Credit + market + operational RWA"),
+        ("Net Worth / Equity","₹ Cr",15300,"Share capital + all reserves"),
+    ]:
+        _inp(ws2, r, lbl, unit, val, note); r+=1
+
+    # ── SHEET 3: INCOME STATEMENT ───────────────────────────────
+    ws3 = wb.create_sheet("📊 Income_Stmt")
+    ws3.sheet_properties.tabColor = "FFD700"
+    _col_widths(ws3, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws3, "INCOME STATEMENT — ANNUAL  (₹ Crore)")
+    r = 3
+    _section(ws3, r, "INCOME"); r+=1
+    inc_start = r
+    for lbl,unit,val,note in [
+        ("Net Interest Income (NII)","₹ Cr",7200,"Interest income − interest expense"),
+        ("Fee & Commission Income","₹ Cr",2100,"Transaction fees, trade finance, WM fees"),
+        ("Trading & MTM Income","₹ Cr",680,"Treasury P&L, bond gains/losses"),
+        ("Other Income","₹ Cr",420,"FX income, recoveries, misc"),
+    ]:
+        _inp(ws3, r, lbl, unit, val, note); r+=1
+    # Total income formula row
+    ws3.row_dimensions[r].height = 18
+    tc = ws3.cell(row=r, column=2, value="Total Operating Income")
+    tc.font = Font(name="Calibri", size=10, bold=True, color=C_WH)
+    tc.fill = _fill(C_MB); tc.alignment = _lft(); tc.border = _bdr()
+    ws3.cell(row=r, column=3, value="₹ Cr").fill = _fill(C_MB); ws3.cell(row=r, column=3).border = _bdr()
+    fc = ws3.cell(row=r, column=4,
+                  value=f"=SUM(D{inc_start}:D{inc_start+3})")
+    fc.font = Font(name="Calibri", size=10, italic=True, color="00005500")
+    fc.fill = _fill(C_FML); fc.border = Border(left=gold_s, right=thin, top=thin, bottom=thin)
+    fc.alignment = _rgt(); fc.number_format = "#,##0.00"
+    ws3.cell(row=r, column=5, value="Auto-calculated").font = Font(name="Calibri", size=8, italic=True, color="00888888")
+    ws3.cell(row=r, column=5).fill = _fill(C_FML); ws3.cell(row=r, column=5).border = _bdr()
+    total_inc_row = r; r+=2
+
+    _section(ws3, r, "EXPENSES"); r+=1
+    exp_start = r
+    for lbl,unit,val,note in [
+        ("Operating / Staff Costs","₹ Cr",4800,"Employee costs + admin + depreciation"),
+        ("Loan Loss Provisions","₹ Cr",2800,"Provisions for NPAs and standard assets"),
+        ("Other Provisions","₹ Cr",0,"Investment depreciation, contingency"),
+    ]:
+        _inp(ws3, r, lbl, unit, val, note); r+=1
+    r+=1
+
+    _section(ws3, r, "PROFIT SUMMARY (AUTO-CALCULATED)"); r+=1
+    ppop_row = r
+    for lbl, fml in [
+        ("Pre-Provision Operating Profit (PPOP)", f"=D{total_inc_row}-D{exp_start}"),
+        ("Profit Before Tax (PBT)",               f"=D{ppop_row}-D{exp_start+1}-D{exp_start+2}"),
+        ("Income Tax (est.)",                     f"=D{ppop_row+1}*0.25"),
+        ("Profit After Tax (PAT)",                f"=D{ppop_row+1}-D{ppop_row+2}"),
+    ]:
+        ws3.row_dimensions[r].height = 18
+        lc = ws3.cell(row=r, column=2, value=lbl)
+        lc.font = Font(name="Calibri", size=10, bold=True, color=C_WH)
+        lc.fill = _fill(C_MB); lc.alignment = _lft(); lc.border = _bdr()
+        ws3.cell(row=r, column=3).fill = _fill(C_MB); ws3.cell(row=r, column=3).border = _bdr()
+        fc2 = ws3.cell(row=r, column=4, value=fml)
+        fc2.font = Font(name="Calibri", size=10, italic=True, color="00005500")
+        fc2.fill = _fill(C_FML)
+        fc2.border = Border(left=gold_s, right=thin, top=thin, bottom=thin)
+        fc2.alignment = _rgt(); fc2.number_format = "#,##0.00"
+        ws3.cell(row=r, column=5, value="Auto-calculated").font = Font(name="Calibri", size=8, italic=True, color="00888888")
+        ws3.cell(row=r, column=5).fill = _fill(C_FML); ws3.cell(row=r, column=5).border = _bdr()
+        r+=1
+
+    # ── SHEET 4: ASSET QUALITY ──────────────────────────────────
+    ws4 = wb.create_sheet("📊 Asset_Quality")
+    ws4.sheet_properties.tabColor = "DC3545"
+    _col_widths(ws4, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws4, "ASSET QUALITY & SECTOR EXPOSURE")
+    r = 3
+    _section(ws4, r, "NPA & ASSET QUALITY RATIOS"); r+=1
+    for lbl,unit,val,note in [
+        ("Gross NPA Ratio","%",7.0,"Gross NPA / Gross Loans × 100"),
+        ("Net NPA Ratio","%",3.5,"Net NPA / Net Advances × 100"),
+        ("SMA-2 Ratio","%",3.2,"SMA-2 / Gross Loans × 100"),
+        ("Restructured Assets Ratio","%",1.8,"Restructured / Gross Loans × 100"),
+        ("Provision Coverage Ratio (PCR)","%",50.0,"Provisions / Gross NPA × 100"),
+        ("Credit-Deposit Ratio","%",72.9,"Gross Loans / Total Deposits × 100"),
+    ]:
+        _inp(ws4, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws4, r, "SECTOR CONCENTRATION (₹ Crore)"); r+=1
+    for lbl,unit,val,note in [
+        ("Real Estate & Construction","₹ Cr",12000,"Developer loans + project finance"),
+        ("Infrastructure","₹ Cr",18000,"Roads, power, ports, telecom"),
+        ("NBFC & HFC","₹ Cr",9500,"Loans to NBFCs and housing finance"),
+        ("Power Sector","₹ Cr",8800,"Thermal, hydro, renewable energy"),
+        ("Textile","₹ Cr",5500,"Spinning, weaving, garments"),
+        ("Gems & Jewellery","₹ Cr",3200,"Diamond, gold jewellery"),
+        ("Iron & Steel","₹ Cr",0,"Steel, alloys, metals"),
+        ("Aviation","₹ Cr",0,"Airlines, airports, MRO"),
+        ("Other Sectors","₹ Cr",0,"All remaining sectors"),
+    ]:
+        _inp(ws4, r, lbl, unit, val, note); r+=1
+
+    # ── SHEET 5: CAPITAL RATIOS ─────────────────────────────────
+    ws5 = wb.create_sheet("📊 Capital_Ratios")
+    ws5.sheet_properties.tabColor = "28A745"
+    _col_widths(ws5, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws5, "CAPITAL ADEQUACY & LIQUIDITY RATIOS")
+    r = 3
+    _section(ws5, r, "CAPITAL ADEQUACY"); r+=1
+    for lbl,unit,val,note in [
+        ("CET1 Ratio","%",9.57,"RBI minimum 8.5% (incl. conservation buffer)"),
+        ("Tier 1 Ratio","%",10.64,"RBI minimum 9.5%"),
+        ("Total CRAR","%",12.9,"RBI minimum 11.5% (incl. CCB)"),
+        ("Leverage Ratio","%",8.1,"RBI minimum 3.5%"),
+    ]:
+        _inp(ws5, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws5, r, "LIQUIDITY RATIOS"); r+=1
+    for lbl,unit,val,note in [
+        ("LCR (Liquidity Coverage Ratio)","%",142.0,"RBI minimum 100%"),
+        ("NSFR (Net Stable Funding Ratio)","%",118.0,"RBI minimum 100%"),
+        ("CASA Ratio","%",40.0,"CASA / Total Deposits × 100"),
+    ]:
+        _inp(ws5, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws5, r, "PROFITABILITY RATIOS"); r+=1
+    for lbl,unit,val,note in [
+        ("Net Interest Margin (NIM)","%",3.9,"NII / Average earning assets"),
+        ("Return on Equity (ROE)","%",13.7,"PAT / Average equity"),
+        ("Return on Assets (ROA)","%",1.1,"PAT / Average total assets"),
+        ("Cost-to-Income Ratio","%",46.2,"Operating costs / Total income"),
+    ]:
+        _inp(ws5, r, lbl, unit, val, note); r+=1
+
+    # ── SHEET 6: DURATION RISK ──────────────────────────────────
+    ws6 = wb.create_sheet("📊 Duration_Risk")
+    ws6.sheet_properties.tabColor = "ADD8E6"
+    _col_widths(ws6, {"A":3,"B":36,"C":12,"D":18,"E":36,"F":22})
+    _sheet_header(ws6, "DURATION, MARKET RISK & REPRICING GAPS")
+    r = 3
+    _section(ws6, r, "INVESTMENT PORTFOLIO — DURATION RISK"); r+=1
+    for lbl,unit,val,note in [
+        ("Avg. Modified Duration — AFS","Years",4.8,"Key driver of MTM loss under rate shock"),
+        ("Avg. Modified Duration — HTM","Years",6.2,"No MTM impact — economic risk only"),
+        ("Avg. Modified Duration — Liabilities","Years",2.1,"Weighted avg. duration of deposits + borrowings"),
+        ("Duration Gap (Assets − Liabilities)","Years",2.7,"Positive = rate rise hurts equity value"),
+    ]:
+        _inp(ws6, r, lbl, unit, val, note); r+=1
+    r+=1
+    _section(ws6, r, "INTEREST RATE REPRICING GAPS (₹ Crore)"); r+=1
+    for lbl,unit,val,note in [
+        ("Rate-Sensitive Assets (RSA)","₹ Cr",95000,"Assets repricing within 1 year"),
+        ("Rate-Sensitive Liabilities (RSL)","₹ Cr",76500,"Liabilities repricing within 1 year"),
+        ("Net Repricing Gap (RSA − RSL)","₹ Cr",18500,"Positive = asset-sensitive bank"),
+        ("Equity Portfolio Beta","β",0.95,"Weighted avg beta vs Nifty 50"),
+        ("Net Open FX Position","₹ Cr",800,"Net forex exposure (+ = long USD)"),
+    ]:
+        _inp(ws6, r, lbl, unit, val, note); r+=1
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return buf.read()
+
+
+# ─────────────────────────────────────────────────────────────────
+# EXCEL PARSER — reads uploaded file → bank dict
+# ─────────────────────────────────────────────────────────────────
+def parse_uploaded_excel(file_bytes):
+    """Parse uploaded Excel template → bank data dict. Returns (bank_dict, errors)."""
+    from openpyxl import load_workbook
+    errors = []
+    warnings = []
+
+    try:
+        wb = load_workbook(filename=io.BytesIO(file_bytes), data_only=True)
+    except Exception as e:
+        return None, [f"Cannot open file: {e}"]
+
+    required_sheets = ["📊 BS_Assets", "📊 BS_Liabilities", "📊 Income_Stmt",
+                       "📊 Asset_Quality", "📊 Capital_Ratios", "📊 Duration_Risk"]
+    missing = [s for s in required_sheets if s not in wb.sheetnames]
+    if missing:
+        return None, [f"Missing sheets: {', '.join(missing)}. Please use the official template."]
+
+    def _val(ws, row, col=4, fallback=0):
+        v = ws.cell(row=row, column=col).value
+        if v is None: return fallback
+        try: return float(v)
+        except: return fallback
+
+    def _str(ws, row, col=4, fallback=""):
+        v = ws.cell(row=row, column=col).value
+        return str(v).strip() if v else fallback
+
+    wa = wb["📊 BS_Assets"]
+    wl = wb["📊 BS_Liabilities"]
+    wi = wb["📊 Income_Stmt"]
+    wq = wb["📊 Asset_Quality"]
+    wc = wb["📊 Capital_Ratios"]
+    wd = wb["📊 Duration_Risk"]
+
+    bank = {
+        # Identity
+        "name":   _str(wa, 4) or "Uploaded Bank",
+        "type":   _str(wa, 5) or "Scheduled Commercial Bank",
+        "rating": _str(wa, 7) or "N/A",
+        # ── Assets ──
+        "total_assets":       _val(wa, 10),
+        "gross_loans":        _val(wa, 11),
+        "retail_loans":       _val(wa, 12),
+        "corporate_loans":    _val(wa, 13),
+        "msme_loans":         _val(wa, 14),
+        "agri_loans":         _val(wa, 15),
+        "gross_npa":          _val(wa, 18),
+        "net_npa":            _val(wa, 19),
+        "provisions":         _val(wa, 20),
+        "investments_htm":    _val(wa, 23),
+        "investments_afs":    _val(wa, 24),
+        "equity_portfolio":   _val(wa, 26),
+        "cash_hqla":          _val(wa, 29),
+        "fixed_assets":       _val(wa, 31),
+        "other_assets":       _val(wa, 32),
+        # ── Liabilities ──
+        "total_deposits":     _val(wl, 4),
+        "casa_deposits":      _val(wl, 5),
+        "term_deposits":      _val(wl, 6),
+        "wholesale_funding":  _val(wl, 9),
+        "sub_debt":           _val(wl, 10),
+        "equity_capital":     _val(wl, 19),
+        "cet1_capital":       _val(wl, 14),
+        "tier1_capital":      _val(wl, 16),
+        "tier2_capital":      _val(wl, 15),
+        "total_capital":      _val(wl, 16),
+        "rwa":                _val(wl, 17),
+        # ── Income ──
+        "net_interest_income": _val(wi, 4),
+        "fee_income":          _val(wi, 5),
+        "trading_income":      _val(wi, 6),
+        "other_income":        _val(wi, 7),
+        "operating_costs":     _val(wi, 12),
+        "provisions_charge":   _val(wi, 13),
+        "pre_provision_profit":_val(wi, 9),
+        "pat":                 _val(wi, 21),
+        "pbt":                 _val(wi, 19),
+        "tax":                 _val(wi, 20),
+        # ── Asset quality ──
+        "gross_npa_ratio":     _val(wq, 4),
+        "net_npa_ratio":       _val(wq, 5),
+        "slma_ratio":          _val(wq, 6),
+        "restructured_ratio":  _val(wq, 7),
+        "pcr":                 _val(wq, 8),
+        "cd_ratio":            _val(wq, 9),
+        "sector_real_estate":  _val(wq, 12),
+        "sector_infrastructure":_val(wq, 13),
+        "sector_nbfc":         _val(wq, 14),
+        "sector_power":        _val(wq, 15),
+        "sector_textile":      _val(wq, 16),
+        "sector_gems":         _val(wq, 17),
+        # ── Capital ratios ──
+        "cet1_ratio":          _val(wc, 4),
+        "crar":                _val(wc, 6),
+        "leverage_ratio":      _val(wc, 7),
+        "lcr":                 _val(wc, 11),
+        "nsfr":                _val(wc, 12),
+        "casa_ratio":          _val(wc, 13),
+        "nim":                 _val(wc, 17),
+        "roe":                 _val(wc, 18),
+        "roa":                 _val(wc, 19),
+        # ── Duration ──
+        "avg_duration_assets": _val(wd, 4),
+        "avg_duration_liabs":  _val(wd, 6),
+        "repricing_gap":       _val(wd, 11),
+    }
+
+    # ── Derive missing fields ──
+    if bank["gross_loans"] > 0:
+        bank["gross_npa_ratio"] = bank["gross_npa_ratio"] or round(bank["gross_npa"] / bank["gross_loans"] * 100, 2)
+        bank["net_npa_ratio"]   = bank["net_npa_ratio"]   or round(bank["net_npa"]   / bank["gross_loans"] * 100, 2)
+        bank["pcr"]             = bank["pcr"]             or round(bank["provisions"]/ bank["gross_npa"]   * 100, 2) if bank["gross_npa"] else 50.0
+    if bank["total_deposits"] > 0:
+        bank["casa_ratio"] = bank["casa_ratio"] or round(bank["casa_deposits"] / bank["total_deposits"] * 100, 1)
+        bank["cd_ratio"]   = bank["cd_ratio"]   or round(bank["gross_loans"]   / bank["total_deposits"] * 100, 1)
+    if bank["rwa"] > 0:
+        bank["cet1_ratio"] = bank["cet1_ratio"] or round(bank["cet1_capital"] / bank["rwa"] * 100, 2)
+        bank["crar"]       = bank["crar"]       or round(bank["total_capital"] / bank["rwa"] * 100, 2)
+    if bank["total_assets"] > 0:
+        bank["nim"] = bank["nim"] or round(bank["net_interest_income"] / bank["total_assets"] * 100, 2)
+        bank["roa"] = bank["roa"] or round(bank["pat"] / bank["total_assets"] * 100, 2)
+    if bank["equity_capital"] > 0:
+        bank["roe"] = bank["roe"] or round(bank["pat"] / bank["equity_capital"] * 100, 1)
+    bank["pre_provision_profit"] = bank["pre_provision_profit"] or (
+        bank["net_interest_income"] + bank["fee_income"] +
+        bank["trading_income"] + bank["other_income"] - bank["operating_costs"]
+    )
+
+    # Validation checks
+    critical = {
+        "Total Assets": bank["total_assets"],
+        "Gross Loans":  bank["gross_loans"],
+        "RWA":          bank["rwa"],
+        "NII":          bank["net_interest_income"],
+        "Total Deposits": bank["total_deposits"],
+    }
+    for field, val in critical.items():
+        if val <= 0:
+            errors.append(f"❌ {field} is zero or missing — please fill in the template")
+
+    return bank, errors
+
 
 COLORS = {
     "darkblue":   "#003366",
@@ -911,7 +1404,13 @@ def scenario_summary_table(bank, selected_scenarios):
 # ─────────────────────────────────────────────────────────────────
 def main():
     apply_css()
-    bank = generate_bank_data()
+
+    # ── Session state: bank data source ──────────────────────────
+    if "bank_data" not in st.session_state:
+        st.session_state.bank_data   = generate_bank_data()
+        st.session_state.bank_source = "demo"
+        st.session_state.bank_label  = "Mountain Path Bank Ltd. (Demo)"
+    bank = st.session_state.bank_data
 
     # ── SIDEBAR ──────────────────────────────────────────────────
     with st.sidebar:
@@ -940,9 +1439,23 @@ def main():
             "🛠️ Custom Scenario Builder",
             "📋 Scenario Comparison",
             "🔄 Reverse Stress Test",
+            "📤 Upload Bank Data",
             "🏛 About the Platform",
             "🎓 Education Hub",
         ], label_visibility="collapsed")
+
+        # Data source indicator
+        src_color = COLORS["gold"] if st.session_state.get("bank_source") == "demo" else COLORS["green"]
+        src_icon  = "🔵" if st.session_state.get("bank_source") == "demo" else "🟢"
+        st.markdown(
+            "<div style='background:#0a1628;border:1px solid " + src_color + ";"
+            "border-radius:6px;padding:7px 10px;margin:8px 0;font-size:0.78rem;'>"
+            "<span style='color:" + src_color + ";font-weight:700;'>" + src_icon + " DATA SOURCE</span><br>"
+            "<span style='color:#d0dff0;font-size:0.75rem;'>" +
+            st.session_state.get("bank_label", "Demo Bank") +
+            "</span></div>",
+            unsafe_allow_html=True
+        )
 
         st.markdown("<hr style='border-color:#1e3a5f;'>", unsafe_allow_html=True)
         st.markdown(f"<div style='color:{COLORS['gold']};font-weight:700;font-size:0.85rem;'>📌 SELECT SCENARIOS</div>", unsafe_allow_html=True)
@@ -1637,6 +2150,280 @@ def main():
         })
         st.dataframe(actions, use_container_width=True, hide_index=True)
 
+
+
+    # ═══════════════════════════════════════════════════════════════
+    # PAGE: UPLOAD BANK DATA
+    # ═══════════════════════════════════════════════════════════════
+    elif page == "📤 Upload Bank Data":
+        _g  = COLORS["gold"]; _db = COLORS["darkblue"]; _cb = COLORS["cardBg"]
+        _mb = COLORS["midblue"]; _bd = COLORS["bgDark"]; _lb = COLORS["lightblue"]
+        _gr = COLORS["green"]; _rd = COLORS["red"]; _mt = COLORS["muted"]
+
+        # Hero
+        st.markdown(
+            "<div style='background:linear-gradient(135deg," + _db + "," + _cb + ");"
+            "border:2px solid " + _g + ";border-radius:10px;"
+            "padding:22px 32px;margin-bottom:20px;'>"
+            "<div style='font-family:Playfair Display,serif;font-size:1.7rem;"
+            "font-weight:900;color:" + _g + ";'>📤 Upload Your Bank's Financial Data</div>"
+            "<div style='color:" + _lb + ";font-size:0.9rem;margin-top:6px;'>"
+            "Download the template → fill in your bank's data → upload → run stress tests on real data"
+            "</div></div>",
+            unsafe_allow_html=True
+        )
+
+        # ── Step 1: Download template ────────────────────────────
+        st.markdown(
+            "<div style='color:" + _g + ";font-family:Playfair Display,serif;"
+            "font-size:1.1rem;font-weight:700;border-bottom:2px solid " + _mb + ";"
+            "padding-bottom:6px;margin:0 0 12px 0;'>Step 1 — Download the Input Template</div>",
+            unsafe_allow_html=True
+        )
+
+        col_dl, col_info = st.columns([1, 2])
+        with col_dl:
+            template_bytes = create_excel_template()
+            st.download_button(
+                label="⬇️  Download Template (.xlsx)",
+                data=template_bytes,
+                file_name="Mountain_Path_Bank_Stress_Test_Template.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True,
+                help="Download the Excel template, fill in your bank data, then upload below"
+            )
+        with col_info:
+            st.markdown(
+                "<div style='background:" + _bd + ";border-left:3px solid " + _g + ";"
+                "border-radius:0 6px 6px 0;padding:10px 14px;font-size:0.83rem;'>"
+                "<b style='color:" + _g + ";'>Template contains 6 sheets:</b><br>"
+                "<span style='color:#d0dff0;'>"
+                "📊 BS_Assets &nbsp;·&nbsp; 📊 BS_Liabilities &nbsp;·&nbsp; 📊 Income_Stmt<br>"
+                "📊 Asset_Quality &nbsp;·&nbsp; 📊 Capital_Ratios &nbsp;·&nbsp; 📊 Duration_Risk"
+                "</span><br><br>"
+                "<b style='color:" + _g + ";'>Fill only the light-blue cells.</b>"
+                "<span style='color:" + _mt + ";'> All values in ₹ Crore (unless stated). "
+                "Percentages as numbers (7.5 not 0.075).</span>"
+                "</div>",
+                unsafe_allow_html=True
+            )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── Step 2: Template sheet guide ────────────────────────
+        st.markdown(
+            "<div style='color:" + _g + ";font-family:Playfair Display,serif;"
+            "font-size:1.1rem;font-weight:700;border-bottom:2px solid " + _mb + ";"
+            "padding-bottom:6px;margin:0 0 12px 0;'>Step 2 — Fill in Your Data</div>",
+            unsafe_allow_html=True
+        )
+        sheets_info = [
+            ("📊 BS_Assets",       "Balance Sheet: Assets",
+             "Total assets, gross loans (retail/corp/MSME/agri), investments (HTM/AFS), HQLA, equity portfolio",
+             _rd),
+            ("📊 BS_Liabilities",  "Balance Sheet: Liabilities & Capital",
+             "Deposits (CASA/term), wholesale funding, sub-debt, CET1, AT1, Tier 2, RWA, net worth",
+             "#fd7e14"),
+            ("📊 Income_Stmt",     "Annual Income Statement",
+             "NII, fee income, trading income, operating costs, provisions, PAT — auto-calculates PPOP and PBT",
+             _g),
+            ("📊 Asset_Quality",   "NPA Ratios & Sector Exposure",
+             "Gross/Net NPA %, SMA-2, PCR, C/D ratio, plus ₹Cr exposure to 8 sectors",
+             "#cc66ff"),
+            ("📊 Capital_Ratios",  "Capital & Liquidity Ratios",
+             "CET1, CRAR, Leverage, LCR, NSFR, CASA ratio, NIM, ROE, ROA, Cost-to-Income",
+             _gr),
+            ("📊 Duration_Risk",   "Duration & Market Risk",
+             "Avg. modified duration of AFS/HTM/Liabilities, repricing gap, equity beta, net FX position",
+             _lb),
+        ]
+        cols = st.columns(3)
+        for i, (sname, stitle, sdesc, scolor) in enumerate(sheets_info):
+            with cols[i % 3]:
+                st.markdown(
+                    "<div style='background:" + _cb + ";border:1px solid " + scolor + "33;"
+                    "border-top:3px solid " + scolor + ";border-radius:8px;"
+                    "padding:12px 14px;margin:4px 0;min-height:110px;'>"
+                    "<div style='color:" + scolor + ";font-weight:700;font-size:0.85rem;"
+                    "font-family:Playfair Display,serif;'>" + sname + "</div>"
+                    "<div style='color:#ffffff;font-size:0.8rem;font-weight:600;margin:3px 0;'>" + stitle + "</div>"
+                    "<div style='color:" + _mt + ";font-size:0.76rem;line-height:1.5;'>" + sdesc + "</div>"
+                    "</div>",
+                    unsafe_allow_html=True
+                )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── Step 3: Upload ───────────────────────────────────────
+        st.markdown(
+            "<div style='color:" + _g + ";font-family:Playfair Display,serif;"
+            "font-size:1.1rem;font-weight:700;border-bottom:2px solid " + _mb + ";"
+            "padding-bottom:6px;margin:0 0 12px 0;'>Step 3 — Upload Completed Template</div>",
+            unsafe_allow_html=True
+        )
+
+        uploaded = st.file_uploader(
+            "Upload your completed Excel template",
+            type=["xlsx"],
+            help="Upload the filled Mountain Path Bank Stress Test Template",
+            label_visibility="collapsed"
+        )
+
+        if uploaded is not None:
+            file_bytes = uploaded.read()
+            with st.spinner("Parsing your bank data..."):
+                parsed_bank, errors = parse_uploaded_excel(file_bytes)
+
+            if errors:
+                for err in errors:
+                    st.error(err)
+                st.markdown(
+                    "<div style='background:#330d10;border:1px solid " + _rd + ";"
+                    "border-radius:6px;padding:12px 16px;color:#ffaaaa;font-size:0.85rem;'>"
+                    "⚠️ Please fix the errors above and re-upload the corrected file."
+                    "</div>",
+                    unsafe_allow_html=True
+                )
+            else:
+                # Success — save to session state
+                bank_name = parsed_bank.get("name", "Uploaded Bank")
+                st.session_state.bank_data   = parsed_bank
+                st.session_state.bank_source = "uploaded"
+                st.session_state.bank_label  = bank_name + " (Uploaded)"
+                bank = parsed_bank  # update local reference
+
+                st.success(f"✅ Data loaded successfully for **{bank_name}** — all pages now use your data!")
+
+                # ── Preview: key metrics ─────────────────────────
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown(
+                    "<div style='color:" + _g + ";font-family:Playfair Display,serif;"
+                    "font-size:1.0rem;font-weight:700;margin-bottom:10px;'>"
+                    "📊 Uploaded Data Preview</div>",
+                    unsafe_allow_html=True
+                )
+
+                # Row 1 metrics
+                m1, m2, m3, m4, m5 = st.columns(5)
+                metrics_r1 = [
+                    ("Total Assets", f"₹{bank['total_assets']:,.0f} Cr", ""),
+                    ("CET1 Ratio",   f"{bank['cet1_ratio']:.2f}%",
+                     "🟢 Pass" if bank["cet1_ratio"] >= 8.0 else "🔴 Below Min"),
+                    ("Gross NPA",    f"{bank['gross_npa_ratio']:.2f}%",
+                     "🟢 <7%" if bank["gross_npa_ratio"] < 7 else "🟠 >7%"),
+                    ("LCR",          f"{bank['lcr']:.1f}%",
+                     "🟢 Pass" if bank["lcr"] >= 100 else "🔴 Below Min"),
+                    ("NIM",          f"{bank['nim']:.2f}%", ""),
+                ]
+                for col, (lbl, val, delta) in zip([m1,m2,m3,m4,m5], metrics_r1):
+                    with col:
+                        st.markdown(
+                            "<div style='background:" + _cb + ";border:1px solid " + _mb + ";"
+                            "border-top:3px solid " + _g + ";border-radius:8px;"
+                            "padding:12px 14px;'>"
+                            "<div style='color:" + _mt + ";font-size:0.72rem;text-transform:uppercase;"
+                            "letter-spacing:1px;'>" + lbl + "</div>"
+                            "<div style='color:" + _g + ";font-size:1.5rem;font-weight:700;"
+                            "font-family:Playfair Display,serif;'>" + val + "</div>"
+                            "<div style='font-size:0.78rem;color:#d0dff0;'>" + delta + "</div>"
+                            "</div>",
+                            unsafe_allow_html=True
+                        )
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                # Two-column detail tables
+                tc1, tc2 = st.columns(2)
+                with tc1:
+                    st.markdown(
+                        "<div style='color:" + _g + ";font-weight:700;font-size:0.88rem;"
+                        "margin-bottom:6px;'>📋 Balance Sheet Summary</div>",
+                        unsafe_allow_html=True
+                    )
+                    bs_items = [
+                        ("Gross Loans",     f"₹{bank['gross_loans']:,.0f} Cr"),
+                        ("Gross NPA",       f"₹{bank['gross_npa']:,.0f} Cr"),
+                        ("AFS Investments", f"₹{bank['investments_afs']:,.0f} Cr"),
+                        ("HQLA",            f"₹{bank['cash_hqla']:,.0f} Cr"),
+                        ("Total Deposits",  f"₹{bank['total_deposits']:,.0f} Cr"),
+                        ("CASA Deposits",   f"₹{bank['casa_deposits']:,.0f} Cr ({bank['casa_ratio']:.1f}%)"),
+                        ("CET1 Capital",    f"₹{bank['cet1_capital']:,.0f} Cr"),
+                        ("RWA",             f"₹{bank['rwa']:,.0f} Cr"),
+                    ]
+                    rows_html = "".join(
+                        "<tr><td style='color:#d0dff0;padding:5px 10px;border-bottom:1px solid #1e3a5f;"
+                        "font-size:0.82rem;'>" + lbl + "</td>"
+                        "<td style='color:" + _g + ";font-weight:700;padding:5px 10px;"
+                        "border-bottom:1px solid #1e3a5f;font-size:0.82rem;text-align:right;'>"
+                        + val + "</td></tr>"
+                        for lbl, val in bs_items
+                    )
+                    st.markdown(
+                        "<table style='width:100%;background:" + _cb + ";"
+                        "border-radius:8px;border-collapse:collapse;'>"
+                        "<thead><tr>"
+                        "<th style='background:" + _db + ";color:" + _g + ";padding:7px 10px;"
+                        "font-size:0.78rem;text-align:left;'>Item</th>"
+                        "<th style='background:" + _db + ";color:" + _g + ";padding:7px 10px;"
+                        "font-size:0.78rem;text-align:right;'>Value</th>"
+                        "</tr></thead><tbody>" + rows_html + "</tbody></table>",
+                        unsafe_allow_html=True
+                    )
+
+                with tc2:
+                    st.markdown(
+                        "<div style='color:" + _g + ";font-weight:700;font-size:0.88rem;"
+                        "margin-bottom:6px;'>📋 Income & Capital Summary</div>",
+                        unsafe_allow_html=True
+                    )
+                    inc_items = [
+                        ("Net Interest Income",  f"₹{bank['net_interest_income']:,.0f} Cr"),
+                        ("Fee Income",           f"₹{bank['fee_income']:,.0f} Cr"),
+                        ("Operating Costs",      f"₹{bank['operating_costs']:,.0f} Cr"),
+                        ("Provisions Charge",    f"₹{bank['provisions_charge']:,.0f} Cr"),
+                        ("PAT",                  f"₹{bank['pat']:,.0f} Cr"),
+                        ("CET1 Ratio",           f"{bank['cet1_ratio']:.2f}%"),
+                        ("Total CRAR",           f"{bank['crar']:.2f}%"),
+                        ("Gross NPA Ratio",      f"{bank['gross_npa_ratio']:.2f}%"),
+                    ]
+                    rows_html2 = "".join(
+                        "<tr><td style='color:#d0dff0;padding:5px 10px;border-bottom:1px solid #1e3a5f;"
+                        "font-size:0.82rem;'>" + lbl + "</td>"
+                        "<td style='color:" + _g + ";font-weight:700;padding:5px 10px;"
+                        "border-bottom:1px solid #1e3a5f;font-size:0.82rem;text-align:right;'>"
+                        + val + "</td></tr>"
+                        for lbl, val in inc_items
+                    )
+                    st.markdown(
+                        "<table style='width:100%;background:" + _cb + ";"
+                        "border-radius:8px;border-collapse:collapse;'>"
+                        "<thead><tr>"
+                        "<th style='background:" + _db + ";color:" + _g + ";padding:7px 10px;"
+                        "font-size:0.78rem;text-align:left;'>Item</th>"
+                        "<th style='background:" + _db + ";color:" + _g + ";padding:7px 10px;"
+                        "font-size:0.78rem;text-align:right;'>Value</th>"
+                        "</tr></thead><tbody>" + rows_html2 + "</tbody></table>",
+                        unsafe_allow_html=True
+                    )
+
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.info("✅ Navigate to any page from the sidebar — all stress tests will now run on your uploaded bank data.")
+
+        # ── Reset to demo ────────────────────────────────────────
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='color:" + _mt + ";font-size:0.8rem;margin-bottom:6px;'>"
+            "Currently loaded: <b style='color:#d0dff0;'>" +
+            st.session_state.get("bank_label", "Demo Bank") + "</b></div>",
+            unsafe_allow_html=True
+        )
+        if st.button("🔄 Reset to Demo Bank (Mountain Path Bank Ltd.)",
+                     use_container_width=False):
+            st.session_state.bank_data   = generate_bank_data()
+            st.session_state.bank_source = "demo"
+            st.session_state.bank_label  = "Mountain Path Bank Ltd. (Demo)"
+            st.success("Reset to demo bank data.")
+            st.rerun()
 
     # ═══════════════════════════════════════════════════════════════
     # PAGE 10: ABOUT THE PLATFORM
