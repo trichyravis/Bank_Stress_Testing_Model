@@ -167,6 +167,54 @@ def apply_css():
     .stTabs [data-baseweb="tab"] {{ color:{COLORS['muted']}; font-weight:600; }}
     .stTabs [aria-selected="true"] {{ background:{COLORS['darkblue']} !important; color:{COLORS['gold']} !important; border-radius:6px; }}
     div[data-testid="stMetricValue"] {{ color:{COLORS['gold']}; font-family:'Playfair Display',serif; }}
+
+    /* ── Selectbox: selected value text ── */
+    [data-testid="stSidebar"] [data-baseweb="select"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] [data-baseweb="select"] span,
+    [data-testid="stSidebar"] [data-baseweb="select"] div,
+    [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {{
+        color: {COLORS['text']} !important;
+        font-weight: 600 !important;
+    }}
+    /* Selectbox container box */
+    [data-testid="stSidebar"] [data-baseweb="select"] > div:first-child {{
+        background-color: {COLORS['cardBg']} !important;
+        border: 1px solid {COLORS['midblue']} !important;
+        border-radius: 6px !important;
+    }}
+    [data-testid="stSidebar"] [data-baseweb="select"] > div:first-child:hover {{
+        border-color: {COLORS['gold']} !important;
+    }}
+    /* ── Dropdown popup list ── */
+    [data-baseweb="popover"] ul,
+    [data-baseweb="menu"] ul,
+    [role="listbox"] {{
+        background-color: {COLORS['cardBg']} !important;
+        border: 1px solid {COLORS['midblue']} !important;
+    }}
+    /* Each option item */
+    [data-baseweb="menu"] li,
+    [role="option"] {{
+        background-color: {COLORS['cardBg']} !important;
+        color: {COLORS['text']} !important;
+        font-weight: 500 !important;
+    }}
+    [data-baseweb="menu"] li:hover,
+    [role="option"]:hover {{
+        background-color: {COLORS['darkblue']} !important;
+        color: {COLORS['gold']} !important;
+    }}
+    /* Selected/highlighted option */
+    [aria-selected="true"][role="option"],
+    [data-baseweb="menu"] li[aria-selected="true"] {{
+        background-color: {COLORS['darkblue']} !important;
+        color: {COLORS['gold']} !important;
+        font-weight: 700 !important;
+    }}
+    /* Dropdown chevron icon */
+    [data-testid="stSidebar"] [data-baseweb="select"] svg {{
+        fill: {COLORS['gold']} !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
