@@ -764,7 +764,7 @@ def plot_pl_decomposition(bank, scenario_name):
     fig.add_trace(go.Bar(x=df["quarter"], y=df["fee_income"],
                          name="Fee Income", marker_color=COLORS["lightblue"]))
     fig.add_trace(go.Bar(x=df["quarter"], y=df["trading_income"],
-                         name="Trading", marker_color=COLORS["gold"] + "88"))
+                         name="Trading", marker_color=hex_to_rgba(COLORS["gold"], 0.53)))
     fig.add_trace(go.Bar(x=df["quarter"],
                          y=[-bank["operating_costs"]/4]*8,
                          name="Operating Costs", marker_color="#cc3333"))
