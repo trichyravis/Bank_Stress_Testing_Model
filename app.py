@@ -908,6 +908,8 @@ def main():
             "🛠️ Custom Scenario Builder",
             "📋 Scenario Comparison",
             "🔄 Reverse Stress Test",
+            "ℹ️ About the Platform",
+            "🎓 Education Hub",
         ], label_visibility="collapsed")
 
         st.markdown("<hr style='border-color:#1e3a5f;'>", unsafe_allow_html=True)
@@ -1602,6 +1604,819 @@ def main():
                           "⭐⭐ High","⭐ Medium","⭐ Medium","⭐ Medium"],
         })
         st.dataframe(actions, use_container_width=True, hide_index=True)
+
+
+    # ═══════════════════════════════════════════════════════════════
+    # PAGE 10: ABOUT THE PLATFORM
+    # ═══════════════════════════════════════════════════════════════
+    elif page == "ℹ️ About the Platform":
+        # Hero banner
+        st.markdown(f"""
+        <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["midblue"]});
+                    border:2px solid {COLORS["gold"]};border-radius:12px;
+                    padding:36px 40px;margin-bottom:24px;text-align:center;'>
+            <div style='font-family:Playfair Display,serif;font-size:2.4rem;
+                        font-weight:900;color:{COLORS["gold"]};letter-spacing:2px;'>
+                🏦 Bank Stress Testing Lab
+            </div>
+            <div style='color:{COLORS["lightblue"]};font-size:1.05rem;
+                        margin:10px 0 6px 0;letter-spacing:1px;'>
+                THE MOUNTAIN PATH — World of Finance
+            </div>
+            <div style='color:{COLORS["muted"]};font-size:0.88rem;'>
+                Advanced Financial Risk Modelling Platform &nbsp;|&nbsp;
+                Powered by Python · Streamlit · Plotly
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        c1, c2 = st.columns([1.1, 0.9])
+        with c1:
+            st.markdown(section_header("About This Platform", "🏦"), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='metric-card' style='line-height:1.9;'>
+                <p style='color:{COLORS["text"]};'>
+                The <b style='color:{COLORS["gold"]};'>Bank Stress Testing Lab</b> is a
+                comprehensive, interactive financial risk modelling platform built to simulate
+                and analyse the resilience of a bank's balance sheet, capital position, and
+                liquidity buffers under a wide spectrum of adverse macroeconomic and
+                market scenarios.
+                </p>
+                <p style='color:{COLORS["text"]};'>
+                This platform implements industry-standard methodologies aligned with
+                <b style='color:{COLORS["lightblue"]};'>RBI Stress Testing Guidelines</b>,
+                <b style='color:{COLORS["lightblue"]};'>Basel III / Basel IV (FRTB)</b>
+                frameworks, and global best practices from the EBA and US Federal Reserve's
+                DFAST programme.
+                </p>
+                <p style='color:{COLORS["text"]};'>
+                All bank data used is <b style='color:{COLORS["gold"]};'>fully synthetic</b>
+                — designed to represent a realistic mid-sized Indian private sector scheduled
+                commercial bank — enabling safe, unrestricted exploration of stress scenarios
+                without any confidentiality concerns.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown(section_header("What the Platform Does", "⚙️"), unsafe_allow_html=True)
+            features = [
+                ("🏠 Dashboard", "Live KPI tracking, scenario CET1 paths, sector concentration, resilience radar"),
+                ("📊 Balance Sheet & Income", "Full synthetic B/S (assets, liabilities, capital) and P&L with ratio analysis"),
+                ("🎯 Run Stress Tests", "Deep-dive single-scenario analysis: P&L decomposition, capital waterfall, quarterly projections"),
+                ("📈 Capital Analysis", "CET1 / CRAR paths, capital buffer analysis, capital walk waterfall for all scenarios"),
+                ("💧 Liquidity Analysis", "LCR stress paths, HQLA buffer evolution, deposit run-off modelling"),
+                ("🔥 Sensitivity & Heatmap", "Two-variable sensitivity heatmap (NPA × Rate), single-variable sweep charts"),
+                ("🛠️ Custom Scenario Builder", "Build any bespoke stress scenario with 8 independent shock parameters"),
+                ("📋 Scenario Comparison", "Side-by-side comparison of all selected scenarios across capital, NPA, liquidity, P&L"),
+                ("🔄 Reverse Stress Test", "Identifies break-even shock levels and plots the failure frontier"),
+                ("🎓 Education Hub", "Conceptual deep-dives on EVT, Basel, VaR, ES, satellite models and more"),
+            ]
+            for icon_name, desc in features:
+                st.markdown(f"""
+                <div style='display:flex;align-items:flex-start;gap:10px;
+                            padding:8px 12px;border-left:3px solid {COLORS["gold"]};
+                            margin:5px 0;background:{COLORS["cardBg"]};border-radius:0 6px 6px 0;'>
+                    <div style='font-weight:700;color:{COLORS["gold"]};min-width:200px;
+                                font-size:0.85rem;'>{icon_name}</div>
+                    <div style='color:{COLORS["muted"]};font-size:0.83rem;'>{desc}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        with c2:
+            st.markdown(section_header("About the Author", "👨‍🏫"), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
+                        border:2px solid {COLORS["gold"]};border-radius:10px;padding:28px 24px;
+                        text-align:center;'>
+                <div style='font-family:Playfair Display,serif;font-size:1.5rem;
+                            font-weight:900;color:{COLORS["gold"]};'>
+                    Prof. V. Ravichandran
+                </div>
+                <div style='color:{COLORS["lightblue"]};font-size:0.88rem;
+                            margin:6px 0 16px 0;letter-spacing:0.5px;'>
+                    28+ Years Corporate Finance & Banking<br>
+                    10+ Years Academic Excellence
+                </div>
+                <hr style='border-color:{COLORS["gold"]}44;margin:12px 0;'>
+                <div style='text-align:left;color:{COLORS["text"]};
+                            font-size:0.85rem;line-height:1.8;'>
+                    <b style='color:{COLORS["gold"]};'>Visiting Faculty at:</b><br>
+                    • BITS Pilani (WILP)<br>
+                    • Christ University, Bangalore<br>
+                    • Goa Institute of Management<br>
+                    • ICFAI Centre for Higher Education, Bangalore
+                    <br><br>
+                    <b style='color:{COLORS["gold"]};'>Courses Taught:</b><br>
+                    • Financial Risk Management<br>
+                    • Fixed Income Securities & Analysis<br>
+                    • Financial Derivatives<br>
+                    • Investment Banking<br>
+                    • Alternative Investment Markets<br>
+                    • Value Risk & Capital Markets
+                    <br><br>
+                    <b style='color:{COLORS["gold"]};'>Target Audience:</b><br>
+                    MBA · CFA · FRM Students & Practitioners
+                </div>
+                <hr style='border-color:{COLORS["gold"]}44;margin:16px 0 12px 0;'>
+                <a href='https://www.linkedin.com/in/trichyravis' target='_blank'
+                   style='color:{COLORS["gold"]};font-weight:700;
+                          text-decoration:none;font-size:0.85rem;'>
+                    🔗 LinkedIn Profile
+                </a>
+                &nbsp;&nbsp;
+                <a href='https://github.com/trichyravis' target='_blank'
+                   style='color:{COLORS["gold"]};font-weight:700;
+                          text-decoration:none;font-size:0.85rem;'>
+                    💻 GitHub
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown(section_header("Tech Stack", "🔧"), unsafe_allow_html=True)
+            tech = [
+                ("Python 3.10+", "Core language", "#3776ab"),
+                ("Streamlit", "App framework", "#ff4b4b"),
+                ("Plotly", "Interactive charts", "#3d4db7"),
+                ("Pandas / NumPy", "Data & numerics", "#150458"),
+                ("SciPy", "Statistical models", "#8caae6"),
+            ]
+            for lib, role, col in tech:
+                st.markdown(f"""
+                <div style='display:flex;justify-content:space-between;align-items:center;
+                            padding:7px 14px;background:{COLORS["cardBg"]};
+                            border-left:3px solid {col};
+                            border-radius:0 6px 6px 0;margin:4px 0;'>
+                    <span style='color:{COLORS["text"]};font-weight:700;
+                                 font-size:0.84rem;'>{lib}</span>
+                    <span style='color:{COLORS["muted"]};font-size:0.80rem;'>{role}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown(section_header("Regulatory Alignment", "📜"), unsafe_allow_html=True)
+            regs = [
+                ("RBI Stress Testing Guidelines", "Master Circular 2015 + updates"),
+                ("Basel III / FRTB", "CET1, ES@97.5%, CRAR floors"),
+                ("ICAAP (Pillar 2)", "Internal capital adequacy"),
+                ("LCR / NSFR", "Basel III liquidity standards"),
+                ("DFAST / EBA methodology", "Scenario design best practice"),
+            ]
+            for reg, desc in regs:
+                st.markdown(f"""
+                <div style='padding:6px 12px;background:{COLORS["cardBg"]};
+                            border-left:3px solid {COLORS["lightblue"]};
+                            border-radius:0 6px 6px 0;margin:4px 0;'>
+                    <span style='color:{COLORS["gold"]};font-weight:700;
+                                 font-size:0.83rem;'>{reg}</span>
+                    <span style='color:{COLORS["muted"]};font-size:0.79rem;'>
+                        &nbsp;—&nbsp;{desc}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Disclaimer
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style='background:#1a0a0a;border:1px solid #cc3333;border-radius:8px;
+                    padding:14px 20px;color:{COLORS["muted"]};font-size:0.78rem;'>
+            <b style='color:#ff6666;'>⚠️ Disclaimer:</b> This platform uses entirely
+            synthetic data for educational and research purposes. No real bank data,
+            confidential information, or proprietary models are used. All stress test
+            results are illustrative. Nothing on this platform constitutes financial,
+            regulatory, or investment advice.
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════
+    # PAGE 11: EDUCATION HUB
+    # ═══════════════════════════════════════════════════════════════
+    elif page == "🎓 Education Hub":
+        st.markdown(f"""
+        <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
+                    border:2px solid {COLORS["gold"]};border-radius:10px;
+                    padding:24px 32px;margin-bottom:20px;'>
+            <div style='font-family:Playfair Display,serif;font-size:1.8rem;
+                        font-weight:900;color:{COLORS["gold"]};'>
+                🎓 Stress Testing Education Hub
+            </div>
+            <div style='color:{COLORS["lightblue"]};font-size:0.92rem;margin-top:6px;'>
+                Conceptual foundations, regulatory frameworks, and modelling methodologies
+                for bank stress testing — curated for MBA, CFA & FRM students.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        edu_tab1, edu_tab2, edu_tab3, edu_tab4, edu_tab5, edu_tab6 = st.tabs([
+            "📖 Foundations",
+            "🏛️ Regulatory Framework",
+            "🔬 Modelling Approaches",
+            "📐 Risk Measures",
+            "🌍 Historical Crises",
+            "📚 Key References",
+        ])
+
+        # ── TAB 1: FOUNDATIONS ──────────────────────────────────
+        with edu_tab1:
+            st.markdown(section_header("What is Bank Stress Testing?", "📖"), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='metric-card' style='line-height:1.9;margin-bottom:14px;'>
+                <b style='color:{COLORS["gold"]};font-size:1.0rem;'>Definition</b><br>
+                <span style='color:{COLORS["text"]};'>
+                Bank stress testing is the process of subjecting a bank's balance sheet,
+                income statement, capital adequacy ratios, and liquidity buffers to
+                hypothetical but <i>plausible adverse</i> macroeconomic and market scenarios
+                to assess whether the institution can remain solvent and liquid through
+                the stress period. It answers the fundamental question:
+                <b style='color:{COLORS["gold"]};'>"How bad can it get — and can we survive it?"</b>
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};'>🎯 Objectives of Stress Testing</b>
+                    <ul style='color:{COLORS["text"]};line-height:2.0;margin-top:8px;'>
+                        <li>Identify vulnerabilities in the balance sheet before they materialise</li>
+                        <li>Quantify capital and liquidity gaps under adverse conditions</li>
+                        <li>Inform risk appetite and concentration limits</li>
+                        <li>Satisfy regulatory capital adequacy requirements (ICAAP)</li>
+                        <li>Support strategic planning and contingency funding</li>
+                        <li>Enable board-level risk oversight and governance</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+            with c2:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};'>🏗️ The Four-Layer Architecture</b>
+                    <div style='margin-top:10px;'>
+                """, unsafe_allow_html=True)
+                layers = [
+                    ("Layer 1", "Macro Scenario Engine", "GDP, rates, FX, equity path generation"),
+                    ("Layer 2", "Satellite Models", "Macro → credit losses, NII, fee income"),
+                    ("Layer 3", "P&L & B/S Projection", "Integrated financial statement projection"),
+                    ("Layer 4", "Capital & Liquidity", "CET1, CRAR, LCR, NSFR breach detection"),
+                ]
+                for num, name, desc in layers:
+                    st.markdown(f"""
+                    <div style='display:flex;align-items:center;gap:10px;
+                                padding:7px 10px;margin:4px 0;
+                                background:{COLORS["darkblue"]};border-radius:6px;'>
+                        <span style='background:{COLORS["gold"]};color:{COLORS["darkblue"]};
+                                     font-weight:900;font-size:0.72rem;border-radius:3px;
+                                     padding:2px 7px;min-width:56px;text-align:center;'>{num}</span>
+                        <div>
+                            <div style='color:{COLORS["gold"]};font-weight:700;
+                                        font-size:0.83rem;'>{name}</div>
+                            <div style='color:{COLORS["muted"]};font-size:0.76rem;'>{desc}</div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                st.markdown("</div></div>", unsafe_allow_html=True)
+
+            st.markdown(section_header("Types of Stress Tests", "🔍"), unsafe_allow_html=True)
+            types_data = [
+                ("Sensitivity Analysis", "Single variable shocked in isolation",
+                 "Rate +200bps; NPA ratio doubles",
+                 "Identify which variables matter most; risk appetite calibration"),
+                ("Historical Scenario", "Replay of past crisis with observed co-movements",
+                 "2008 GFC; 2020 COVID; 2013 Taper Tantrum",
+                 "Realistic, credible; uses actual correlation structure"),
+                ("Hypothetical Scenario", "Forward-looking plausible adverse narrative",
+                 "India recession + INR collapse + real estate crash",
+                 "Captures novel risks; forward-looking; regulatory stress"),
+                ("Reverse Stress Test", "Work backwards from failure to find break-even shocks",
+                 "What NPA level breaks CET1 < 8%?",
+                 "Identifies Achilles' heel; forces management action planning"),
+            ]
+            for ttype, method, example, use in types_data:
+                st.markdown(f"""
+                <div style='background:{COLORS["cardBg"]};border-left:4px solid {COLORS["gold"]};
+                            border-radius:0 8px 8px 0;padding:12px 16px;margin:8px 0;'>
+                    <div style='font-family:Playfair Display,serif;font-weight:700;
+                                color:{COLORS["gold"]};font-size:0.95rem;'>{ttype}</div>
+                    <div style='display:grid;grid-template-columns:1fr 1fr 1fr;
+                                gap:8px;margin-top:8px;'>
+                        <div><span style='color:{COLORS["muted"]};font-size:0.75rem;
+                                         text-transform:uppercase;'>Method</span><br>
+                             <span style='color:{COLORS["text"]};font-size:0.82rem;'>{method}</span></div>
+                        <div><span style='color:{COLORS["muted"]};font-size:0.75rem;
+                                         text-transform:uppercase;'>Example</span><br>
+                             <span style='color:{COLORS["lightblue"]};font-size:0.82rem;'>{example}</span></div>
+                        <div><span style='color:{COLORS["muted"]};font-size:0.75rem;
+                                         text-transform:uppercase;'>Use Case</span><br>
+                             <span style='color:{COLORS["text"]};font-size:0.82rem;'>{use}</span></div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # ── TAB 2: REGULATORY FRAMEWORK ─────────────────────────
+        with edu_tab2:
+            st.markdown(section_header("Basel III / IV Capital Requirements", "🏛️"), unsafe_allow_html=True)
+            c1, c2 = st.columns(2)
+            with c1:
+                capital_reqs = [
+                    ("CET1 Ratio (Minimum)", "4.5%", "6.0% (RBI)"),
+                    ("CET1 + Conservation Buffer", "7.0%", "8.0% (RBI)"),
+                    ("Tier 1 Ratio (Minimum)", "6.0%", "7.5% (RBI)"),
+                    ("Total CRAR (Minimum)", "8.0%", "11.5% (RBI)"),
+                    ("Capital Conservation Buffer", "2.5%", "2.5%"),
+                    ("Countercyclical Buffer", "0–2.5%", "0% (currently)"),
+                    ("D-SIB Surcharge (SBI)", "+0.6%", "Additional"),
+                    ("Leverage Ratio", "3.0%", "3.5% (RBI)"),
+                ]
+                st.markdown(f"""
+                <table class='styled-table'>
+                    <thead><tr>
+                        <th>Capital Metric</th>
+                        <th>Basel III Min</th>
+                        <th>RBI Requirement</th>
+                    </tr></thead>
+                    <tbody>
+                        {"".join(f"<tr><td>{r[0]}</td><td>{r[1]}</td><td style='color:{COLORS['gold']};font-weight:700;'>{r[2]}</td></tr>" for r in capital_reqs)}
+                    </tbody>
+                </table>
+                """, unsafe_allow_html=True)
+            with c2:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};'>📋 FRTB — Fundamental Review of the Trading Book</b>
+                    <div style='color:{COLORS["text"]};line-height:1.9;margin-top:10px;font-size:0.85rem;'>
+                        <b style='color:{COLORS["lightblue"]};'>Key Change:</b>
+                        Replaces 99% VaR with <b>97.5% Expected Shortfall (ES)</b> as the
+                        primary market risk metric.<br><br>
+                        <b style='color:{COLORS["lightblue"]};'>Why ES over VaR?</b>
+                        ES captures the <i>average loss beyond the VaR threshold</i>,
+                        penalising fat-tailed distributions that VaR ignores.
+                        ES is a <b>coherent risk measure</b> (subadditive); VaR is not.<br><br>
+                        <b style='color:{COLORS["lightblue"]};'>Liquidity Horizons:</b>
+                        Different holding periods (10–120 days) assigned by asset class —
+                        equities 20 days, credit products 40–120 days.<br><br>
+                        <b style='color:{COLORS["lightblue"]};'>Backtesting:</b>
+                        P&L attribution tests required; IMA approval withdrawn if
+                        excessive P&L exceptions detected.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown(section_header("RBI Stress Testing Guidelines (India)", "🇮🇳"), unsafe_allow_html=True)
+            rbi_items = [
+                ("Scope", "All scheduled commercial banks with assets > ₹100 crore"),
+                ("Frequency", "Annual minimum; quarterly for Systemically Important Banks (D-SIBs)"),
+                ("Scenarios", "Minimum 3: mild, moderate, severe. RBI publishes benchmark scenarios annually"),
+                ("Risk Coverage", "Credit risk, market risk, liquidity risk, and combined scenarios mandatory"),
+                ("Governance", "Board Risk Management Committee sign-off; CEO attestation required"),
+                ("ICAAP Integration", "Stress test results feed directly into Pillar 2 capital planning"),
+                ("Reporting", "Results submitted to RBI annually; published in Financial Stability Report"),
+                ("NPR Mechanism", "RBI can mandate capital addition if stress tests reveal inadequacy"),
+            ]
+            for item, desc in rbi_items:
+                st.markdown(f"""
+                <div style='display:flex;gap:12px;padding:7px 12px;
+                            background:{COLORS["cardBg"]};border-radius:6px;margin:4px 0;
+                            border-left:3px solid {COLORS["midblue"]};'>
+                    <span style='color:{COLORS["gold"]};font-weight:700;min-width:160px;
+                                 font-size:0.83rem;'>{item}</span>
+                    <span style='color:{COLORS["text"]};font-size:0.83rem;'>{desc}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown(section_header("Liquidity Standards: LCR & NSFR", "💧"), unsafe_allow_html=True)
+            c3, c4 = st.columns(2)
+            with c3:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};'>LCR — Liquidity Coverage Ratio</b>
+                    <div style='font-size:1.4rem;color:{COLORS["lightblue"]};
+                                font-family:Playfair Display,serif;margin:8px 0;'>
+                        LCR = HQLA / Net Cash Outflows (30-day) ≥ 100%
+                    </div>
+                    <div style='color:{COLORS["text"]};font-size:0.83rem;line-height:1.8;'>
+                        <b>HQLA Tiers:</b><br>
+                        • Level 1: Cash, central bank reserves, sovereign bonds (0% haircut)<br>
+                        • Level 2A: High-grade corporate bonds (15% haircut)<br>
+                        • Level 2B: RMBS, lower-rated corporates (25–50% haircut)<br><br>
+                        <b>Stress Outflow Rates:</b><br>
+                        • Retail deposits (stable): 3–5% run-off<br>
+                        • Retail deposits (less stable): 10% run-off<br>
+                        • Wholesale (non-financial): 25–40% run-off<br>
+                        • Interbank / financial: 100% run-off
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            with c4:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};'>NSFR — Net Stable Funding Ratio</b>
+                    <div style='font-size:1.4rem;color:{COLORS["lightblue"]};
+                                font-family:Playfair Display,serif;margin:8px 0;'>
+                        NSFR = Available Stable Funding / Required Stable Funding ≥ 100%
+                    </div>
+                    <div style='color:{COLORS["text"]};font-size:0.83rem;line-height:1.8;'>
+                        <b>Available Stable Funding (ASF):</b><br>
+                        • Equity & Tier 1 capital: 100% weight<br>
+                        • Retail deposits (>1yr): 95% weight<br>
+                        • Wholesale funding (>1yr): 50–100% weight<br><br>
+                        <b>Required Stable Funding (RSF):</b><br>
+                        • Cash & short-term assets: 0–5% weight<br>
+                        • Loans to corporates (<1yr): 50% weight<br>
+                        • Mortgages: 65% weight<br>
+                        • Non-performing loans: 100% weight
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # ── TAB 3: MODELLING APPROACHES ─────────────────────────
+        with edu_tab3:
+            st.markdown(section_header("Satellite Models — The Technical Heart", "🔬"), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='metric-card' style='margin-bottom:16px;'>
+                <b style='color:{COLORS["gold"]};'>What are Satellite Models?</b><br>
+                <span style='color:{COLORS["text"]};line-height:1.9;'>
+                Satellite models are econometric or statistical models that translate
+                macroeconomic shock variables (GDP growth, interest rates, unemployment,
+                exchange rates) into bank-specific financial outcomes (NPA ratios,
+                net interest income, fee income, trading losses). Each major risk type
+                requires its own satellite model.
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+
+            models = [
+                {
+                    "name": "📉 Credit Loss Model (Most Critical)",
+                    "formula": "ΔNPA_t = α + β₁·ΔGDP_t + β₂·Δrate_t + β₃·Δunemployment_t + β₄·NPA_{t-1} + β₅·Δproperty_t + ε_t",
+                    "inputs": "GDP growth, repo rate, unemployment, property prices, sector output",
+                    "output": "Quarterly NPA ratio by portfolio segment → provisions → capital depletion",
+                    "estimation": "OLS regression on 10–15 years of historical quarterly data; estimated separately for retail, corporate, MSME, agriculture",
+                    "key_param": "GDP sensitivity coefficient β₁ typically −2.0 to −3.5 (1% GDP fall → 2–3.5% relative NPA increase)",
+                },
+                {
+                    "name": "📈 Net Interest Income (NII) Model",
+                    "formula": "ΔNII = Σ (Repricing Gap_k) × (Δrate_k) across maturity buckets k",
+                    "inputs": "Yield curve shift, repricing schedule of assets and liabilities, CASA ratio, loan mix",
+                    "output": "NII compression or expansion under rate shock scenarios",
+                    "estimation": "Asset-liability management gap analysis; duration mismatch quantification",
+                    "key_param": "Asset-liability repricing gap (rate-sensitive assets minus liabilities); CASA deposits are sticky, wholesale reprices fast",
+                },
+                {
+                    "name": "💹 Market Risk / MTM Model",
+                    "formula": "ΔP ≈ −Duration × Δyield × P_AFS + β_equity × ΔEquity_index + ΔFXNOP × ΔRate",
+                    "inputs": "Modified duration of AFS portfolio, equity beta, net open FX position, credit spread widening",
+                    "output": "Mark-to-market losses on AFS investments, equity portfolio, and FX positions",
+                    "estimation": "Duration from bond analytics; equity beta from regression; FX exposure from treasury systems",
+                    "key_param": "Average modified duration of AFS portfolio (typically 3–6 years for Indian banks)",
+                },
+                {
+                    "name": "💰 Fee & Non-Interest Income Model",
+                    "formula": "Fee_t = α + β₁·GDP_t + β₂·CreditGrowth_t + β₃·Nifty_t + ε_t",
+                    "inputs": "Economic activity proxies, transaction volume indicators, equity market levels",
+                    "output": "Fee income compression during recession (transaction banking, trade finance, wealth management)",
+                    "estimation": "Regression of fee income on macroeconomic and market activity proxies",
+                    "key_param": "Fee income typically falls 15–35% under severe stress as transaction volumes, credit card spends, and trade finance volumes contract",
+                },
+            ]
+            for m in models:
+                with st.expander(m["name"], expanded=False):
+                    st.markdown(f"""
+                    <div style='background:{COLORS["darkblue"]};border-radius:8px;
+                                padding:12px 16px;margin:6px 0;font-family:monospace;
+                                color:{COLORS["lightblue"]};font-size:0.88rem;
+                                border-left:3px solid {COLORS["gold"]};'>
+                        <b style='color:{COLORS["gold"]};'>Model Equation:</b><br>
+                        {m["formula"]}
+                    </div>
+                    """, unsafe_allow_html=True)
+                    cols = st.columns(2)
+                    with cols[0]:
+                        st.markdown(f"""
+                        <div style='padding:10px;background:{COLORS["cardBg"]};
+                                    border-radius:6px;margin:4px 0;'>
+                            <b style='color:{COLORS["gold"]};font-size:0.82rem;'>📥 Inputs</b><br>
+                            <span style='color:{COLORS["text"]};font-size:0.82rem;'>{m["inputs"]}</span>
+                        </div>
+                        <div style='padding:10px;background:{COLORS["cardBg"]};
+                                    border-radius:6px;margin:4px 0;'>
+                            <b style='color:{COLORS["gold"]};font-size:0.82rem;'>📤 Output</b><br>
+                            <span style='color:{COLORS["text"]};font-size:0.82rem;'>{m["output"]}</span>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    with cols[1]:
+                        st.markdown(f"""
+                        <div style='padding:10px;background:{COLORS["cardBg"]};
+                                    border-radius:6px;margin:4px 0;'>
+                            <b style='color:{COLORS["gold"]};font-size:0.82rem;'>⚙️ Estimation</b><br>
+                            <span style='color:{COLORS["text"]};font-size:0.82rem;'>{m["estimation"]}</span>
+                        </div>
+                        <div style='padding:10px;background:{COLORS["cardBg"]};
+                                    border-radius:6px;margin:4px 0;
+                                    border-left:3px solid {COLORS["gold"]};'>
+                            <b style='color:{COLORS["gold"]};font-size:0.82rem;'>🔑 Key Parameter</b><br>
+                            <span style='color:{COLORS["lightblue"]};font-size:0.82rem;'>{m["key_param"]}</span>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+            st.markdown(section_header("P&L and Capital Projection Logic", "🧮"), unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style='background:{COLORS["darkblue"]};border-radius:8px;
+                        padding:16px 20px;font-family:monospace;
+                        color:{COLORS["lightblue"]};font-size:0.85rem;
+                        border:1px solid {COLORS["midblue"]};line-height:2.0;'>
+                <b style='color:{COLORS["gold"]};'>Quarterly Capital Projection Algorithm:</b><br><br>
+                Pre-Provision Operating Profit (PPOP)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;= Stressed NII + Stressed Fee Income + Stressed Trading Income<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− Operating Costs (relatively fixed)<br><br>
+                Net Profit = PPOP − Incremental Provisions − Taxes<br><br>
+                Retained Earnings += Net Profit<br>
+                CET1 Capital += Retained Earnings (after dividend)<br>
+                RWA = RWA × (1 + credit migration factor + growth factor)<br><br>
+                <b style='color:{COLORS["gold"]};'>CET1 Ratio = CET1 Capital / Risk-Weighted Assets</b><br><br>
+                <span style='color:{COLORS["muted"]};'>Breach check each quarter: CET1 &lt; 8.0% → regulatory intervention threshold</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ── TAB 4: RISK MEASURES ────────────────────────────────
+        with edu_tab4:
+            st.markdown(section_header("Value at Risk (VaR) vs Expected Shortfall (ES)", "📐"), unsafe_allow_html=True)
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};font-size:0.95rem;'>
+                        📊 Value at Risk (VaR)
+                    </b>
+                    <div style='font-size:1.5rem;color:{COLORS["lightblue"]};
+                                font-family:Playfair Display,serif;margin:10px 0;'>
+                        VaR_q = inf{{x : P(L > x) ≤ 1−q}}
+                    </div>
+                    <div style='color:{COLORS["text"]};font-size:0.83rem;line-height:1.9;'>
+                        <b>Definition:</b> The maximum loss not exceeded with probability q
+                        over a given holding period.<br>
+                        <b>Intuition:</b> "We are 99% confident our daily loss will not exceed
+                        ₹X crore."<br>
+                        <b>Limitations:</b>
+                        <ul style='margin:4px 0;'>
+                            <li>Not <i>subadditive</i> — not a coherent risk measure</li>
+                            <li>Says nothing about <i>how bad</i> losses are beyond the threshold</li>
+                            <li>Underestimates tail risk for fat-tailed distributions</li>
+                            <li>Susceptible to manipulation by concentrated positions</li>
+                        </ul>
+                        <b>Regulatory status:</b> Replaced by ES under FRTB (Basel IV)
+                        for internal model approval.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            with c2:
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <b style='color:{COLORS["gold"]};font-size:0.95rem;'>
+                        📊 Expected Shortfall (ES) / CVaR
+                    </b>
+                    <div style='font-size:1.5rem;color:{COLORS["lightblue"]};
+                                font-family:Playfair Display,serif;margin:10px 0;'>
+                        ES_q = E[L | L > VaR_q]
+                    </div>
+                    <div style='color:{COLORS["text"]};font-size:0.83rem;line-height:1.9;'>
+                        <b>Definition:</b> The expected loss <i>given that</i> the loss
+                        exceeds VaR — the average of the worst (1−q)% outcomes.<br>
+                        <b>Intuition:</b> "Given that we breach the 99% threshold, our
+                        average loss will be ₹Y crore."<br>
+                        <b>Advantages:</b>
+                        <ul style='margin:4px 0;'>
+                            <li><b>Coherent risk measure</b> — satisfies subadditivity</li>
+                            <li>Captures the full severity of tail losses</li>
+                            <li>Penalises fat tails that VaR ignores</li>
+                            <li>ES ≥ VaR always; the gap grows with tail heaviness</li>
+                        </ul>
+                        <b>Regulatory status:</b> Mandated at <b>97.5%</b> confidence
+                        under FRTB for market risk capital.
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown(section_header("Key Capital Adequacy Ratios", "🏦"), unsafe_allow_html=True)
+            ratios = [
+                ("CET1 Ratio", "Common Equity Tier 1 / Risk-Weighted Assets",
+                 "The highest quality capital — ordinary shares + retained earnings only. "
+                 "The core loss-absorbing layer. RBI minimum: 6% (+ 2.5% conservation buffer = 8.5%)."),
+                ("Tier 1 Ratio", "Tier 1 Capital / Risk-Weighted Assets",
+                 "CET1 + Additional Tier 1 (AT1 bonds, perpetual debt). "
+                 "AT1 instruments absorb losses through coupon cancellation or principal write-down. "
+                 "RBI minimum: 7.5%."),
+                ("CRAR (Total Capital)", "Total Capital / Risk-Weighted Assets",
+                 "Tier 1 + Tier 2 (sub-debt, general provisions). "
+                 "RBI minimum: 11.5% including all buffers. Breach triggers PCA (Prompt Corrective Action)."),
+                ("Leverage Ratio", "Tier 1 Capital / Total Exposure (on + off balance sheet)",
+                 "Non-risk-based backstop to prevent excessive leverage regardless of RWA model. "
+                 "Basel III minimum 3%; RBI requires 3.5%. Prevents model arbitrage."),
+                ("PCR (Provision Coverage Ratio)", "Cumulative Provisions / Gross NPA",
+                 "Measures adequacy of provisions against NPAs. "
+                 "Higher PCR = more conservative; reduces future P&L volatility. "
+                 "RBI advisory minimum: 70% (was mandatory 2009–2011)."),
+            ]
+            for name, formula, description in ratios:
+                with st.expander(f"📐 {name}", expanded=False):
+                    st.markdown(f"""
+                    <div style='background:{COLORS["darkblue"]};border-radius:6px;
+                                padding:8px 14px;margin:4px 0;font-family:monospace;
+                                color:{COLORS["lightblue"]};font-size:0.9rem;
+                                border-left:3px solid {COLORS["gold"]};'>
+                        {formula}
+                    </div>
+                    <div style='color:{COLORS["text"]};font-size:0.84rem;
+                                line-height:1.8;padding:8px 4px;'>
+                        {description}
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            st.markdown(section_header("Gross NPA vs Net NPA vs SMA", "📉"), unsafe_allow_html=True)
+            npa_stages = [
+                ("Standard Asset", "0–30 DPD", "0.25–1%", "Normal performing; no concern"),
+                ("SMA-0", "0 DPD but stress signals", "—", "Overdue principal/interest 1–30 days"),
+                ("SMA-1", "31–60 DPD", "—", "Early warning; enhanced monitoring"),
+                ("SMA-2", "61–90 DPD", "—", "Close watch; pre-NPA stage"),
+                ("Sub-Standard (NPA)", "91–365 DPD", "15–25%", "Declared NPA; provisioning begins"),
+                ("Doubtful (NPA)", ">1 year NPA", "25–100%", "Secured: 25→40→100%; Unsecured: 100%"),
+                ("Loss (NPA)", "Identified loss", "100%", "Written off or fully provisioned"),
+            ]
+            st.markdown(f"""
+            <table class='styled-table'>
+                <thead><tr>
+                    <th>Asset Classification</th><th>Days Past Due</th>
+                    <th>Provision Rate</th><th>Description</th>
+                </tr></thead>
+                <tbody>
+                    {"".join(f"<tr><td style='color:{COLORS["gold"]};font-weight:700;'>{r[0]}</td><td>{r[1]}</td><td style='color:{COLORS["red"] if "NPA" in r[0] or "Loss" in r[0] else COLORS["green"]};font-weight:700;'>{r[2]}</td><td>{r[3]}</td></tr>" for r in npa_stages)}
+                </tbody>
+            </table>
+            """, unsafe_allow_html=True)
+
+        # ── TAB 5: HISTORICAL CRISES ─────────────────────────────
+        with edu_tab5:
+            st.markdown(section_header("Historical Stress Episodes — India & Global", "🌍"), unsafe_allow_html=True)
+            crises = [
+                {
+                    "name": "2008 Global Financial Crisis (GFC)",
+                    "period": "Sep 2008 – Mar 2009",
+                    "trigger": "US subprime mortgage collapse → Lehman Brothers bankruptcy → global credit freeze",
+                    "india_impact": "Nifty −60% peak-to-trough; GDP growth slowed to 6.7%; FII outflows $13bn; INR depreciated 25%",
+                    "banking": "Indian banks relatively insulated (low US exposure); credit growth crashed from 30% to 17%; liquidity stress",
+                    "lesson": "Contagion through capital markets and trade finance channels even with limited direct exposure; CASA banks outperformed",
+                    "color": COLORS["red"],
+                },
+                {
+                    "name": "2013 Taper Tantrum",
+                    "period": "May – Sep 2013",
+                    "trigger": "Fed signals tapering of QE; sudden EM capital outflows; INR depreciation spiral",
+                    "india_impact": "INR depreciated 20% (₹55 to ₹68); 10Y G-sec yield +200bps; Nifty −10%; RBI emergency rate hike 50bps",
+                    "banking": "MTM losses on AFS bond portfolios; NII compression; wholesale funding costs spiked",
+                    "lesson": "Duration mismatch in investment portfolios is a severe vulnerability; CASA funding outperforms under rate shock",
+                    "color": COLORS["orange"],
+                },
+                {
+                    "name": "2018 IL&FS / NBFC Crisis",
+                    "period": "Sep 2018 – Mar 2019",
+                    "trigger": "IL&FS defaults on commercial paper; contagion to entire NBFC sector; funding freeze",
+                    "india_impact": "Nifty −15%; NBFC stocks −40–80%; mutual fund redemptions; CP market paralysed",
+                    "banking": "Banks with high NBFC/HFC exposure suffered NPA spike; inter-bank funding stress; liquidity hoarding",
+                    "lesson": "Concentration in NBFC sector creates tail risk; wholesale funding dependency is acute vulnerability; liquidity crisis ≠ solvency crisis",
+                    "color": COLORS["yellow"],
+                },
+                {
+                    "name": "2020 COVID-19 Shock",
+                    "period": "Feb – Apr 2020",
+                    "trigger": "Pandemic lockdowns; global demand collapse; RBI moratorium on loan repayments",
+                    "india_impact": "GDP −7.3% (FY21); Nifty −38% in 6 weeks; RBI cut repo 115bps; ₹20 lakh crore stimulus package",
+                    "banking": "Moratorium covered 50%+ of loan books; deferred NPA recognition; provisioning surged; credit growth near zero",
+                    "lesson": "Regulatory forbearance (moratorium) can delay but not prevent NPA crystallisation; banks with high retail floating rate loans benefited from rate cuts",
+                    "color": "#cc66ff",
+                },
+                {
+                    "name": "2023 Adani Short-Seller Report",
+                    "period": "Jan – Mar 2023",
+                    "trigger": "Hindenburg Research report on Adani Group; sudden market confidence shock",
+                    "india_impact": "Adani Group market cap fell $120bn; Nifty −5%; Indian banks with Adani exposure under scrutiny",
+                    "banking": "PSU banks with Adani infrastructure exposure flagged; SBI led damage control; LIC holdings scrutinised",
+                    "lesson": "Concentrated single-group exposure creates reputational + credit risk simultaneously; board oversight of large borrower exposure critical",
+                    "color": COLORS["lightblue"],
+                },
+            ]
+            for crisis in crises:
+                with st.expander(f"📅 {crisis['name']} ({crisis['period']})", expanded=False):
+                    st.markdown(f"""
+                    <div style='border-left:4px solid {crisis["color"]};
+                                padding:0 0 0 14px;margin:4px 0;'>
+                        <div style='display:grid;grid-template-columns:1fr 1fr;
+                                    gap:10px;margin-bottom:8px;'>
+                            <div style='background:{COLORS["cardBg"]};padding:10px;
+                                        border-radius:6px;'>
+                                <b style='color:{COLORS["gold"]};font-size:0.8rem;'>🔥 Trigger</b><br>
+                                <span style='color:{COLORS["text"]};font-size:0.82rem;'>{crisis["trigger"]}</span>
+                            </div>
+                            <div style='background:{COLORS["cardBg"]};padding:10px;
+                                        border-radius:6px;'>
+                                <b style='color:{COLORS["gold"]};font-size:0.8rem;'>🇮🇳 India Impact</b><br>
+                                <span style='color:{COLORS["text"]};font-size:0.82rem;'>{crisis["india_impact"]}</span>
+                            </div>
+                            <div style='background:{COLORS["cardBg"]};padding:10px;
+                                        border-radius:6px;'>
+                                <b style='color:{COLORS["gold"]};font-size:0.8rem;'>🏦 Banking Sector</b><br>
+                                <span style='color:{COLORS["text"]};font-size:0.82rem;'>{crisis["banking"]}</span>
+                            </div>
+                            <div style='background:{COLORS["darkblue"]};padding:10px;
+                                        border-radius:6px;border:1px solid {crisis["color"]};'>
+                                <b style='color:{crisis["color"]};font-size:0.8rem;'>💡 Key Lesson</b><br>
+                                <span style='color:{COLORS["text"]};font-size:0.82rem;'>{crisis["lesson"]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+        # ── TAB 6: REFERENCES ───────────────────────────────────
+        with edu_tab6:
+            st.markdown(section_header("Key References & Further Reading", "📚"), unsafe_allow_html=True)
+            refs = {
+                "📘 Foundational Textbooks": [
+                    ("Duffie & Singleton", "Credit Risk: Pricing, Measurement, and Management", "Princeton University Press, 2003"),
+                    ("McNeil, Frey & Embrechts", "Quantitative Risk Management (2nd ed.)", "Princeton University Press, 2015"),
+                    ("Hull", "Risk Management and Financial Institutions (5th ed.)", "Wiley Finance, 2018"),
+                    ("Bessis", "Risk Management in Banking (4th ed.)", "Wiley, 2015"),
+                ],
+                "🏛️ Regulatory Documents": [
+                    ("Basel Committee on Banking Supervision", "Basel III: A Global Regulatory Framework", "BIS, 2010 (rev. 2017)"),
+                    ("Basel Committee on Banking Supervision", "Minimum Capital Requirements for Market Risk (FRTB)", "BIS, 2019"),
+                    ("Reserve Bank of India", "Master Circular on Stress Testing", "RBI, 2015 + updates"),
+                    ("RBI", "Guidelines on Liquidity Risk Management (LCR, NSFR)", "RBI, 2014–2020"),
+                    ("RBI", "Prudential Framework for Resolution of Stressed Assets", "RBI, 2019"),
+                ],
+                "📄 Key Academic Papers": [
+                    ("Borio, Drehmann & Tsatsaronis", "Stress-testing macro stress testing: does it live up to expectations?", "BIS Working Paper No. 369, 2012"),
+                    ("Quagliariello", "Stress-testing the Banking System: Methodologies and Applications", "Cambridge University Press, 2009"),
+                    ("Foglia", "Stress Testing Credit Risk: A Survey of Authorities' Approaches", "International Journal of Central Banking, 2009"),
+                    ("Schuermann", "Stress Testing Banks", "Wharton Financial Institutions Center, 2012"),
+                ],
+                "🔗 Online Resources": [
+                    ("BIS", "Basel Committee publications & stress testing papers", "www.bis.org/bcbs"),
+                    ("RBI", "Financial Stability Reports (half-yearly)", "www.rbi.org.in"),
+                    ("IMF", "Financial Sector Assessment Program (FSAP) methodology", "www.imf.org/fsap"),
+                    ("Federal Reserve", "DFAST (Dodd-Frank Stress Tests) documentation", "www.federalreserve.gov/supervisionreg/dfast"),
+                ],
+            }
+            for category, items in refs.items():
+                st.markdown(f"""
+                <div style='color:{COLORS["gold"]};font-family:Playfair Display,serif;
+                            font-weight:700;font-size:1.0rem;margin:16px 0 8px 0;'>
+                    {category}
+                </div>
+                """, unsafe_allow_html=True)
+                for i, (author, title, source) in enumerate(items, 1):
+                    st.markdown(f"""
+                    <div style='display:flex;gap:10px;padding:8px 12px;
+                                background:{COLORS["cardBg"]};border-radius:6px;
+                                margin:3px 0;border-left:3px solid {COLORS["midblue"]};'>
+                        <span style='color:{COLORS["gold"]};font-weight:700;
+                                     min-width:22px;font-size:0.82rem;'>[{i}]</span>
+                        <div>
+                            <span style='color:{COLORS["lightblue"]};font-weight:700;
+                                         font-size:0.83rem;'>{author}.</span>
+                            <span style='color:{COLORS["text"]};font-size:0.83rem;'>
+                                &nbsp;<i>"{title}"</i>
+                            </span><br>
+                            <span style='color:{COLORS["muted"]};font-size:0.78rem;'>
+                                {source}
+                            </span>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
+                        border:1px solid {COLORS["gold"]};border-radius:10px;
+                        padding:20px 24px;text-align:center;'>
+                <div style='font-family:Playfair Display,serif;font-size:1.1rem;
+                            font-weight:700;color:{COLORS["gold"]};margin-bottom:6px;'>
+                    THE MOUNTAIN PATH — World of Finance
+                </div>
+                <div style='color:{COLORS["text"]};font-size:0.84rem;margin-bottom:12px;'>
+                    Explore more advanced finance content, models, and educational materials
+                </div>
+                <a href='https://www.linkedin.com/in/trichyravis' target='_blank'
+                   style='color:{COLORS["gold"]};font-weight:700;text-decoration:none;
+                          font-size:0.88rem;'>
+                    🔗 Connect on LinkedIn
+                </a>
+                &nbsp;&nbsp;&nbsp;
+                <a href='https://github.com/trichyravis' target='_blank'
+                   style='color:{COLORS["gold"]};font-weight:700;text-decoration:none;
+                          font-size:0.88rem;'>
+                    💻 View on GitHub
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
+
 
     # ── FOOTER ───────────────────────────────────────────────────
     st.markdown("<hr class='gold-divider'>", unsafe_allow_html=True)
