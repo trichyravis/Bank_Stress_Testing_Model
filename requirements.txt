@@ -1,1 +1,12 @@
+# ============================================================
+# THE MOUNTAIN PATH — World of Finance
+# Bank Stress Testing Lab
+# Prof. V. Ravichandran
+# Requirements File
+# ============================================================
 
+streamlit>=1.32.0
+pandas>=2.0.0
+numpy>=1.26.0
+plotly>=5.18.0
+scipy>=1.11.0
