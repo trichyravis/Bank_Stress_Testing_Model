@@ -29,6 +29,16 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────────────────
 # MOUNTAIN PATH DESIGN SYSTEM
 # ─────────────────────────────────────────────────────────────────
+
+def hex_to_rgba(hex_color, alpha=0.08):
+    """Convert hex colour string to rgba() -- safe for all Plotly versions."""
+    h = hex_color.lstrip("#")
+    if len(h) == 6:
+        r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    else:
+        r, g, b = 173, 216, 230
+    return f"rgba({r},{g},{b},{alpha:.2f})"
+
 COLORS = {
     "darkblue":   "#003366",
     "midblue":    "#004d80",
@@ -629,7 +639,7 @@ def plot_npa_evolution(bank, selected_scenarios):
             line=dict(color=sc["color"], width=2.5),
             mode="lines+markers",
             fill="tozeroy" if s_name == list(selected_scenarios)[0] else "none",
-            fillcolor=sc["color"] + "15",
+            fillcolor=hex_to_rgba(sc["color"], 0.08),
         ))
     fig.update_layout(title="Gross NPA Ratio Evolution (%)",
                       title_font=dict(color=COLORS["gold"], size=15, family="Playfair Display"),
@@ -792,7 +802,7 @@ def plot_radar_scenarios(bank):
             r=values, theta=cats_closed,
             name=s_name.split(" ", 1)[1],
             line=dict(color=sc["color"], width=2),
-            fill="toself", fillcolor=sc["color"] + "22",
+            fill="toself", fillcolor=hex_to_rgba(sc["color"], 0.13),
         ))
     fig.update_layout(
         paper_bgcolor=PLOTLY_TEMPLATE["paper_bgcolor"],
@@ -1290,7 +1300,7 @@ def main():
             fig = base_fig()
             fig.add_trace(go.Scatter(x=npa_vals, y=npa_sens["min_cet1"],
                 name="Min CET1", line=dict(color=COLORS["gold"], width=2.5),
-                fill="tozeroy", fillcolor=COLORS["gold"] + "15"))
+                fill="tozeroy", fillcolor=hex_to_rgba(COLORS["gold"], 0.08)))
             fig.add_hline(y=8.0, line=dict(color=COLORS["red"], dash="dash"),
                           annotation_text="CET1 Min 8%")
             fig.update_layout(title="CET1 Sensitivity to NPA Multiplier",
@@ -1303,7 +1313,7 @@ def main():
             fig2 = base_fig()
             fig2.add_trace(go.Scatter(x=rate_vals, y=rate_sens["min_cet1"],
                 name="Min CET1", line=dict(color=COLORS["lightblue"], width=2.5),
-                fill="tozeroy", fillcolor=COLORS["lightblue"] + "15"))
+                fill="tozeroy", fillcolor=hex_to_rgba(COLORS["lightblue"], 0.08)))
             fig2.add_hline(y=8.0, line=dict(color=COLORS["red"], dash="dash"),
                            annotation_text="CET1 Min 8%")
             fig2.update_layout(title="CET1 Sensitivity to Rate Shock (bps)",
@@ -1317,7 +1327,7 @@ def main():
         fig3 = base_fig()
         fig3.add_trace(go.Scatter(x=eq_vals*100, y=eq_sens["min_cet1"],
             name="Min CET1", line=dict(color=COLORS["orange"], width=2.5),
-            fill="tozeroy", fillcolor=COLORS["orange"] + "15"))
+            fill="tozeroy", fillcolor=hex_to_rgba(COLORS["orange"], 0.08)))
         fig3.add_hline(y=8.0, line=dict(color=COLORS["red"], dash="dash"),
                        annotation_text="CET1 Min 8%")
         fig3.update_layout(title="CET1 Sensitivity to Equity Market Crash (%)",
@@ -1545,7 +1555,7 @@ def main():
                 x=frontier_npa, y=frontier_rate,
                 mode="lines+markers",
                 line=dict(color=COLORS["red"], width=3),
-                fill="tozeroy", fillcolor=COLORS["red"] + "22",
+                fill="tozeroy", fillcolor=hex_to_rgba(COLORS["red"], 0.13),
                 name="Failure Frontier",
                 marker=dict(size=6, color=COLORS["red"]),
             ))
