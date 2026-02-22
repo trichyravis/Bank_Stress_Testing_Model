@@ -173,9 +173,12 @@ def apply_css():
     .gold-divider {{ border:none; border-top:1px solid {COLORS['gold']}44; margin:16px 0; }}
 
     /* Override Streamlit defaults */
-    .stTabs [data-baseweb="tab-list"] {{ background:{COLORS['cardBg']}; border-radius:8px; padding:4px; }}
-    .stTabs [data-baseweb="tab"] {{ color:{COLORS['muted']}; font-weight:600; }}
-    .stTabs [aria-selected="true"] {{ background:{COLORS['darkblue']} !important; color:{COLORS['gold']} !important; border-radius:6px; }}
+    .stTabs [data-baseweb="tab-list"] {{ background:{COLORS['cardBg']}; border-radius:8px; padding:4px; border:1px solid {COLORS['midblue']}; }}
+    .stTabs [data-baseweb="tab"] {{ color:{COLORS['muted']} !important; font-weight:600; font-family:'Source Sans Pro',sans-serif; padding:6px 14px; }}
+    .stTabs [data-baseweb="tab"]:hover {{ color:{COLORS['text']} !important; }}
+    .stTabs [aria-selected="true"] {{ background:{COLORS['darkblue']} !important; color:{COLORS['gold']} !important; border-radius:6px; font-weight:700 !important; }}
+    .stTabs [data-baseweb="tab-panel"] {{ padding:16px 0; background:transparent; }}
+    [data-testid="stTabsNavContainer"] {{ margin-bottom:8px; }}
     div[data-testid="stMetricValue"] {{ color:{COLORS['gold']}; font-family:'Playfair Display',serif; }}
 
     /* ── Selectbox: selected value text ── */
@@ -908,7 +911,7 @@ def main():
             "🛠️ Custom Scenario Builder",
             "📋 Scenario Comparison",
             "🔄 Reverse Stress Test",
-            "ℹ️ About the Platform",
+            "🏛 About the Platform",
             "🎓 Education Hub",
         ], label_visibility="collapsed")
 
@@ -1609,7 +1612,7 @@ def main():
     # ═══════════════════════════════════════════════════════════════
     # PAGE 10: ABOUT THE PLATFORM
     # ═══════════════════════════════════════════════════════════════
-    elif page == "ℹ️ About the Platform":
+    elif page == "🏛 About the Platform":
         # Hero banner
         st.markdown(f"""
         <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["midblue"]});
@@ -2417,6 +2420,9 @@ def main():
             </div>
             """, unsafe_allow_html=True)
 
+
+    else:
+        st.warning(f"Page not found: `{page}` — please select from the navigation menu.")
 
     # ── FOOTER ───────────────────────────────────────────────────
     st.markdown("<hr class='gold-divider'>", unsafe_allow_html=True)
