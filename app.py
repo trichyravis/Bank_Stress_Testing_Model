@@ -2111,77 +2111,62 @@ def main():
                 },
             ]
             for m in models:
-                st.markdown(f"""
-                <div style='background:{COLORS["cardBg"]};
-                            border:1px solid {COLORS["midblue"]};
-                            border-left:5px solid {COLORS["gold"]};
-                            border-radius:8px;margin:12px 0;overflow:hidden;'>
+                _cb  = COLORS["cardBg"]
+                _mb  = COLORS["midblue"]
+                _g   = COLORS["gold"]
+                _db  = COLORS["darkblue"]
+                _bd  = COLORS["bgDark"]
+                _lb  = COLORS["lightblue"]
+                _grid_sep = hex_to_rgba(COLORS["midblue"], 0.27)
+                _html = (
+                    "<div style='background:" + _cb + ";border:1px solid " + _mb + ";"
+                    "border-left:5px solid " + _g + ";border-radius:8px;margin:12px 0;overflow:hidden;'>"
 
-                    <!-- Model header -->
-                    <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
-                                padding:13px 18px;border-bottom:1px solid {COLORS["midblue"]};'>
-                        <span style='font-family:Playfair Display,serif;font-size:1.0rem;
-                                     font-weight:700;color:#ffffff;letter-spacing:0.3px;'>
-                            {m["name"]}
-                        </span>
-                    </div>
+                    "<div style='background:linear-gradient(135deg," + _db + "," + _cb + ");"
+                    "padding:13px 18px;border-bottom:1px solid " + _mb + ";'>"
+                    "<span style='font-family:Playfair Display,serif;font-size:1.0rem;"
+                    "font-weight:700;color:#ffffff;letter-spacing:0.3px;'>"
+                    + m["name"] +
+                    "</span></div>"
 
-                    <!-- Formula bar -->
-                    <div style='background:{COLORS["darkblue"]};padding:11px 18px;
-                                border-bottom:1px solid {COLORS["midblue"]};
-                                font-family:monospace;font-size:0.86rem;'>
-                        <span style='color:{COLORS["gold"]};font-weight:700;'>Model Equation: </span>
-                        <span style='color:{COLORS["lightblue"]};'>{m["formula"]}</span>
-                    </div>
+                    "<div style='background:" + _db + ";padding:11px 18px;"
+                    "border-bottom:1px solid " + _mb + ";"
+                    "font-family:monospace;font-size:0.86rem;'>"
+                    "<span style='color:" + _g + ";font-weight:700;'>Model Equation:&nbsp;</span>"
+                    "<span style='color:" + _lb + ";'>" + m["formula"] + "</span>"
+                    "</div>"
 
-                    <!-- 4-cell grid -->
-                    <div style='display:grid;grid-template-columns:1fr 1fr;gap:1px;
-                                background:{COLORS["midblue"]}44;'>
+                    "<div style='display:grid;grid-template-columns:1fr 1fr;gap:1px;"
+                    "background:" + _grid_sep + ";'>"
 
-                        <div style='background:{COLORS["bgDark"]};padding:13px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.72rem;font-weight:700;
-                                        text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>
-                                📥 Inputs
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>
-                                {m["inputs"]}
-                            </div>
-                        </div>
+                    "<div style='background:" + _bd + ";padding:13px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.72rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>📥 Inputs</div>"
+                    "<div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>" + m["inputs"] + "</div>"
+                    "</div>"
 
-                        <div style='background:{COLORS["bgDark"]};padding:13px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.72rem;font-weight:700;
-                                        text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>
-                                📤 Output
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>
-                                {m["output"]}
-                            </div>
-                        </div>
+                    "<div style='background:" + _bd + ";padding:13px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.72rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>📤 Output</div>"
+                    "<div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>" + m["output"] + "</div>"
+                    "</div>"
 
-                        <div style='background:{COLORS["cardBg"]};padding:13px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.72rem;font-weight:700;
-                                        text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>
-                                ⚙️ Estimation
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>
-                                {m["estimation"]}
-                            </div>
-                        </div>
+                    "<div style='background:" + _cb + ";padding:13px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.72rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>⚙️ Estimation</div>"
+                    "<div style='color:#d0dff0;font-size:0.84rem;line-height:1.7;'>" + m["estimation"] + "</div>"
+                    "</div>"
 
-                        <div style='background:{COLORS["cardBg"]};padding:13px 16px;
-                                    border-left:2px solid {COLORS["gold"]};'>
-                            <div style='color:{COLORS["gold"]};font-size:0.72rem;font-weight:700;
-                                        text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>
-                                🔑 Key Parameter
-                            </div>
-                            <div style='color:#ffffff;font-size:0.84rem;line-height:1.7;font-weight:500;'>
-                                {m["key_param"]}
-                            </div>
-                        </div>
+                    "<div style='background:" + _cb + ";padding:13px 16px;"
+                    "border-left:2px solid " + _g + ";'>"
+                    "<div style='color:" + _g + ";font-size:0.72rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>🔑 Key Parameter</div>"
+                    "<div style='color:#ffffff;font-size:0.84rem;line-height:1.7;font-weight:500;'>" + m["key_param"] + "</div>"
+                    "</div>"
 
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                    "</div></div>"
+                )
+                st.markdown(_html, unsafe_allow_html=True)
 
             st.markdown(section_header("P&L and Capital Projection Logic", "🧮"), unsafe_allow_html=True)
             st.markdown(f"""
@@ -2282,34 +2267,26 @@ def main():
                  "RBI advisory minimum: 70% (was mandatory 2009–2011)."),
             ]
             for name, formula, description in ratios:
-                st.markdown(f"""
-                <div style='background:{COLORS["cardBg"]};
-                            border:1px solid {COLORS["midblue"]};
-                            border-left:5px solid {COLORS["gold"]};
-                            border-radius:8px;margin:8px 0;overflow:hidden;'>
-                    <!-- Header -->
-                    <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
-                                padding:11px 18px;border-bottom:1px solid {COLORS["midblue"]};'>
-                        <span style='font-family:Playfair Display,serif;font-size:0.95rem;
-                                     font-weight:700;color:#ffffff;'>
-                            📐 {name}
-                        </span>
-                    </div>
-                    <!-- Formula -->
-                    <div style='background:{COLORS["darkblue"]};padding:10px 18px;
-                                border-bottom:1px solid {COLORS["midblue"]}66;
-                                font-family:monospace;font-size:0.88rem;'>
-                        <span style='color:{COLORS["gold"]};font-weight:700;'>Formula: </span>
-                        <span style='color:{COLORS["lightblue"]};'>{formula}</span>
-                    </div>
-                    <!-- Description -->
-                    <div style='padding:12px 18px;background:{COLORS["bgDark"]};'>
-                        <div style='color:#d0dff0;font-size:0.84rem;line-height:1.8;'>
-                            {description}
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                _cb = COLORS["cardBg"]; _mb = COLORS["midblue"]
+                _g  = COLORS["gold"];   _db = COLORS["darkblue"]
+                _bd = COLORS["bgDark"]; _lb = COLORS["lightblue"]
+                _html = (
+                    "<div style='background:" + _cb + ";border:1px solid " + _mb + ";"
+                    "border-left:5px solid " + _g + ";border-radius:8px;margin:8px 0;overflow:hidden;'>"
+                    "<div style='background:linear-gradient(135deg," + _db + "," + _cb + ");"
+                    "padding:11px 18px;border-bottom:1px solid " + _mb + ";'>"
+                    "<span style='font-family:Playfair Display,serif;font-size:0.95rem;"
+                    "font-weight:700;color:#ffffff;'>📐 " + name + "</span></div>"
+                    "<div style='background:" + _db + ";padding:10px 18px;"
+                    "border-bottom:1px solid " + _mb + ";"
+                    "font-family:monospace;font-size:0.88rem;'>"
+                    "<span style='color:" + _g + ";font-weight:700;'>Formula:&nbsp;</span>"
+                    "<span style='color:" + _lb + ";'>" + formula + "</span></div>"
+                    "<div style='padding:12px 18px;background:" + _bd + ";'>"
+                    "<div style='color:#d0dff0;font-size:0.84rem;line-height:1.8;'>" + description + "</div>"
+                    "</div></div>"
+                )
+                st.markdown(_html, unsafe_allow_html=True)
 
             st.markdown(section_header("Gross NPA vs Net NPA vs SMA", "📉"), unsafe_allow_html=True)
             npa_stages = [
@@ -2384,78 +2361,60 @@ def main():
                 },
             ]
             for crisis in crises:
-                # Render each crisis as a fully styled HTML card (no expander — avoids contrast issues)
-                st.markdown(f"""
-                <div style='background:{COLORS["cardBg"]};
-                            border:1px solid {crisis["color"]}55;
-                            border-left:5px solid {crisis["color"]};
-                            border-radius:8px;padding:0;margin:10px 0;
-                            overflow:hidden;'>
-                    <!-- Header bar -->
-                    <div style='background:linear-gradient(135deg,{COLORS["darkblue"]},{COLORS["cardBg"]});
-                                padding:12px 18px;border-bottom:1px solid {crisis["color"]}44;
-                                display:flex;justify-content:space-between;align-items:center;'>
-                        <div>
-                            <span style='font-family:Playfair Display,serif;font-size:1.0rem;
-                                         font-weight:700;color:#ffffff;letter-spacing:0.3px;'>
-                                📅 {crisis["name"]}
-                            </span>
-                        </div>
-                        <span style='background:{crisis["color"]}22;color:{crisis["color"]};
-                                     border:1px solid {crisis["color"]}66;border-radius:20px;
-                                     padding:3px 12px;font-size:0.75rem;font-weight:700;
-                                     white-space:nowrap;'>
-                            {crisis["period"]}
-                        </span>
-                    </div>
-                    <!-- Content grid -->
-                    <div style='display:grid;grid-template-columns:1fr 1fr;
-                                gap:1px;background:{crisis["color"]}22;'>
-                        <div style='background:{COLORS["bgDark"]};padding:14px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.75rem;
-                                        font-weight:700;text-transform:uppercase;
-                                        letter-spacing:1px;margin-bottom:6px;'>
-                                🔥 Trigger
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>
-                                {crisis["trigger"]}
-                            </div>
-                        </div>
-                        <div style='background:{COLORS["bgDark"]};padding:14px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.75rem;
-                                        font-weight:700;text-transform:uppercase;
-                                        letter-spacing:1px;margin-bottom:6px;'>
-                                🇮🇳 India Impact
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>
-                                {crisis["india_impact"]}
-                            </div>
-                        </div>
-                        <div style='background:{COLORS["cardBg"]};padding:14px 16px;'>
-                            <div style='color:{COLORS["gold"]};font-size:0.75rem;
-                                        font-weight:700;text-transform:uppercase;
-                                        letter-spacing:1px;margin-bottom:6px;'>
-                                🏦 Banking Sector
-                            </div>
-                            <div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>
-                                {crisis["banking"]}
-                            </div>
-                        </div>
-                        <div style='background:{COLORS["cardBg"]};padding:14px 16px;
-                                    border-left:2px solid {crisis["color"]};'>
-                            <div style='color:{crisis["color"]};font-size:0.75rem;
-                                        font-weight:700;text-transform:uppercase;
-                                        letter-spacing:1px;margin-bottom:6px;'>
-                                💡 Key Lesson
-                            </div>
-                            <div style='color:#ffffff;font-size:0.85rem;line-height:1.7;
-                                        font-weight:500;'>
-                                {crisis["lesson"]}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                _cc  = crisis["color"]
+                _cb  = COLORS["cardBg"]
+                _db  = COLORS["darkblue"]
+                _bd  = COLORS["bgDark"]
+                _g   = COLORS["gold"]
+                _bdr = hex_to_rgba(_cc, 0.13)   # border separator
+                _hdr = hex_to_rgba(_cc, 0.27)   # grid sep
+                _badge_bg  = hex_to_rgba(_cc, 0.13)
+                _badge_bdr = hex_to_rgba(_cc, 0.40)
+                _html = (
+                    "<div style='background:" + _cb + ";border:1px solid " + _badge_bdr + ";"
+                    "border-left:5px solid " + _cc + ";border-radius:8px;margin:10px 0;overflow:hidden;'>"
+
+                    "<div style='background:linear-gradient(135deg," + _db + "," + _cb + ");"
+                    "padding:12px 18px;border-bottom:1px solid " + _bdr + ";"
+                    "display:flex;justify-content:space-between;align-items:center;'>"
+                    "<span style='font-family:Playfair Display,serif;font-size:1.0rem;"
+                    "font-weight:700;color:#ffffff;letter-spacing:0.3px;'>📅 " + crisis["name"] + "</span>"
+                    "<span style='background:" + _badge_bg + ";color:" + _cc + ";"
+                    "border:1px solid " + _badge_bdr + ";border-radius:20px;"
+                    "padding:3px 12px;font-size:0.75rem;font-weight:700;white-space:nowrap;'>"
+                    + crisis["period"] + "</span></div>"
+
+                    "<div style='display:grid;grid-template-columns:1fr 1fr;"
+                    "gap:1px;background:" + _hdr + ";'>"
+
+                    "<div style='background:" + _bd + ";padding:14px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.75rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>🔥 Trigger</div>"
+                    "<div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>" + crisis["trigger"] + "</div>"
+                    "</div>"
+
+                    "<div style='background:" + _bd + ";padding:14px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.75rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>🇮🇳 India Impact</div>"
+                    "<div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>" + crisis["india_impact"] + "</div>"
+                    "</div>"
+
+                    "<div style='background:" + _cb + ";padding:14px 16px;'>"
+                    "<div style='color:" + _g + ";font-size:0.75rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>🏦 Banking Sector</div>"
+                    "<div style='color:#d0dff0;font-size:0.85rem;line-height:1.7;'>" + crisis["banking"] + "</div>"
+                    "</div>"
+
+                    "<div style='background:" + _cb + ";padding:14px 16px;"
+                    "border-left:2px solid " + _cc + ";'>"
+                    "<div style='color:" + _cc + ";font-size:0.75rem;font-weight:700;"
+                    "text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>💡 Key Lesson</div>"
+                    "<div style='color:#ffffff;font-size:0.85rem;line-height:1.7;font-weight:500;'>" + crisis["lesson"] + "</div>"
+                    "</div>"
+
+                    "</div></div>"
+                )
+                st.markdown(_html, unsafe_allow_html=True)
 
         # ── TAB 6: REFERENCES ───────────────────────────────────
         with edu_tab6:
